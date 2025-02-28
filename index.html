@@ -15,8 +15,8 @@
                     <div class="card-body">
                         <form id="loginForm">
                             <div class="mb-3">
-                                <label for="email" class="form-label">Correo</label>
-                                <input type="email" class="form-control" id="email" required>
+                                <label for="usuario" class="form-label">usuario</label>
+                                <input type="text" class="form-control" id="usuario" required>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Contraseña</label>
@@ -32,13 +32,13 @@
     <script>
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault();
-            const email = document.getElementById("email").value;
+            const usuario = document.getElementById("usuario").value;
             const password = document.getElementById("password").value;
             
             fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ usuario, password })
             })
             .then(response => response.json())
             .then(data => {
