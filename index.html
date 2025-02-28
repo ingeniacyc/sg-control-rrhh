@@ -3,67 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Formulario de Inscripción</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-container {
+            max-width: 700px;
+            margin: 2rem auto;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #6a1b9a;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .header img {
+            max-width: 100px;
+            margin-bottom: 1rem;
+        }
+        .header h1 {
+            color: #6a1b9a;
+        }
+        .btn-purple {
+            background-color: #6a1b9a;
+            color: #ffffff;
+        }
+        .btn-purple:hover {
+            background-color: #4a0072;
+        }
+        .form-text {
+            font-size: 0.9rem;
+            color: #6a1b9a;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header text-center">Login</div>
-                    <div class="card-body">
-                        <form id="loginForm">
-                            <div class="mb-3">
-                                <label for="usuario" class="form-label">Usuario</label>
-                                <input type="text" class="form-control" id="usuario" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Ingresar</button>
-                        </form>
-                        <div id="mensaje" class="mt-3 text-center"></div>
+    <div class="form-container">
+        <div class="header">
+            <!-- Espacio para el logo -->
+            <img src="data:image/png;base64,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" alt="Logo Institucional">
+            <h1>Formulario de Admisión 2025</h1>
+            <hr>
+        </div>
+
+        <form id="inscripcion-form">
+          <!-- Nombres Asesora -->
+            <div class="mb-3">
+              <label for="asesoraCheckbox" class="form-label">Selecciona a la Asesora</label>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="asesoraCheckbox" name="asesora" value="Faviola Vilca">
+                        <label class="form-check-label" for="asesoraCheckbox">
+                            Asesora: Faviola Vilca
+                        </label>
                     </div>
+            </div>
+
+            <!-- Nombres y Apellidos -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="nombres" class="form-label">Nombres</label>
+                    <input type="text" class="form-control" id="nombres" name="nombres" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input type="text" class="form-control" id="apellidos" name="apellidos" required>
                 </div>
             </div>
-        </div>
+
+            <!-- Correo Electrónico -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <!-- DNI y Edad -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="dni" class="form-label">Número de DNI</label>
+                    <input type="text" class="form-control" id="dni" name="dni" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="edad" class="form-label">Selecciona tu edad:</label>
+                    <select class="form-select" id="edad" name="edad" required>
+                        <option value="" selected disabled>Elige una opción</option>
+                        <!-- Opciones generadas del 16 al 30 -->
+                        <script>
+                            for (let i = 16; i <= 30; i++) {
+                                document.write(`<option value="${i}">${i}</option>`);
+                            }
+                            document.write(`<option value="otros">Otros</option>`);
+                        </script>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+              <!-- Columna 1: Fecha de Nacimiento -->
+              <div class="col-md-4">
+                  <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                  <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+              </div>
+
+              <!-- Columna 2: Sexo (Desplegable) -->
+              <div class="col-md-4">
+                  <label for="sexo" class="form-label">Sexo</label>
+                  <select class="form-select" id="sexo" name="sexo" required>
+                      <option value="" disabled selected>Selecciona</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Otro">Otro</option>
+                  </select>
+              </div>
+
+              <!-- Columna 3: Estado Civil -->
+              <div class="col-md-4">
+                  <label for="estado_civil" class="form-label">Estado Civil</label>
+                  <select class="form-select" id="estado_civil" name="estado_civil" required>
+                      <option value="" disabled selected>Selecciona tu estado civil</option>
+                      <option value="Soltero">Soltero</option>
+                      <option value="Casado">Casado</option>
+                      <option value="Divorciado">Divorciado</option>
+                      <option value="Viudo">Viudo</option>
+                      <option value="Otro">Otro</option>
+                  </select>
+              </div>
+          </div>
+
+            <!-- Celular y Operador -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="celular" class="form-label">Celular</label>
+                    <input type="text" class="form-control" id="celular" name="celular" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="operador" class="form-label">Operador</label>
+                    <select class="form-select" id="operador" name="operador" required>
+                        <option value="" disabled selected>Selecciona tu operador</option>
+                        <option value="Movistar">Movistar</option>
+                        <option value="Claro">Claro</option>
+                        <option value="Entel">Entel</option>
+                        <option value="Bitel">Bitel</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="ciudad_residencia" class="form-label">Ciudad de Residencia</label>
+                <select class="form-select" id="ciudad_residencia" name="ciudad_residencia" required>
+                    <option value="" disabled selected>Selecciona tu ciudad</option>
+                    <option value="Tacna">Tacna</option>
+                    <option value="otro">Otro</option>
+                </select>
+                <input type="text" class="form-control mt-2 d-none" id="ciudad_otro" name="ciudad_otro" placeholder="Ingresa tu ciudad">
+              </div>
+
+              <div class="col-md-6">
+                <label for="ciudad_residencia" class="form-label">Distrito/Zona</label>
+                <select class="form-select" id="distrito" name="distrito" required>
+                    <option value="" disabled selected>Selecciona tu ciudad</option>
+                    <option value="Tacna">Tacna</option>
+                    <option value="Leguía (Tacna)">Leguía (Tacna)</option>
+                    <option value="Gregorio Albarracín">Gregorio Albarracín</option>
+                    <option value="Viñani">Viñani</option>
+                    <option value="Ciudad Nueva">Ciudad Nueva</option>
+                    <option value="Alto de la Alianza">Alto de la Alianza</option>
+                    <option value="Pocollay">Pocollay</option>
+                    <option value="Pachia">Pachia</option>
+                    <option value="Habitat">Habitat</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <input type="text" class="form-control mt-2 d-none" id="distrito_otro" name="distrito_otro" placeholder="Ingresa tu distrito">
+            </div>
+            </div>
+            <!-- Campo de Domicilio -->
+            <div class="mb-3">
+                <label for="domicilio" class="form-label">Domicilio</label>
+                <input type="text" class="form-control" id="domicilio" name="domicilio" placeholder="Ingresa tu domicilio" required>
+            </div>
+            <br>
+            <!-- Campo ¿En qué colegio culminaste tus estudios? -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="colegio" class="form-label">¿En qué colegio culminaste tus estudios?</label>
+                <input type="text" class="form-control" id="colegio" name="colegio" placeholder="Nombre del colegio" required>
+              </div>
+              <div class="col-md-6">
+                <label for="aniocolegio" class="form-label">¿En que año terminaste el colegio?</label>
+                <input type="text" class="form-control" id="aniocolegio" name="aniocolegio" placeholder="Año de culminación" required>
+              </div>
+            </div>
+            <!-- Tipo de Colegio y Carrera -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="tipocolegio" class="form-label">Tipo de Colegio</label>
+                    <select class="form-select" id="tipocolegio" name="tipo_colegio" required>
+                        <option value="" disabled selected>Selecciona tu colegio</option>
+                        <option value="Privado">Privado</option>
+                        <option value="Público">Público</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="ciudad_colegio" class="form-label">Lugar de procedencia del colegio</label>
+                  <select class="form-select" id="ciudad_colegio" name="ciudad_colegio" required>
+                      <option value="" disabled selected>Selecciona tu ciudad</option>
+                      <option value="Tacna">Tacna</option>
+                      <option value="otro">Otro</option>
+                  </select>
+                  <input type="text" class="form-control mt-2 d-none" id="ciudad_colegiootro" name="ciudad_colegiootro" placeholder="Lugar procedencia del Colegio">
+                </div>
+
+            <!-- Campo ¿Qué carreras deseas estudiar? -->
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                  <label for="carrera" class="form-label">¿Qué carreras deseas estudiar?</label>
+                  <select class="form-select" id="carrera" name="carrera" required>
+                      <option value="" disabled selected>Selecciona una carrera</option>
+                      <option value="Administración de Negocios Internacionales">Administración de Negocios Internacionales</option>
+                      <option value="Contabilidad">Contabilidad</option>
+                  </select>
+              </div>
+              <div class="col-md-6">
+                <label for="turno" class="form-label">¿En qué turno estás interesado?</label>
+                <select class="form-select" id="turno" name="turno" required>
+                    <option value="" disabled selected>Selecciona un turno</option>
+                    <option value="Mañana">Mañana (8:00am a 1:00pm)</option>
+                    <option value="Noche">Noche (5:00pm a 9:45pm)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Campo ¿Eres mayor de edad? -->
+            <div class="mb-3">
+                <label class="form-label">¿Eres mayor de edad?</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="mayorSi" name="mayorDeEdad" value="Si" required>
+                    <label class="form-check-label" for="mayorSi">Sí</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="mayorNo" name="mayorDeEdad" value="No" required>
+                    <label class="form-check-label" for="mayorNo">No</label>
+                </div>
+            </div>
+
+            <!-- Campo ¿Cómo te enteraste de Neumann? -->
+            <div class="mb-3">
+                <label for="enteraste" class="form-label">¿Cómo te enteraste de Neumann?</label>
+                <select class="form-select" id="enteraste" name="enteraste" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Youtube">Youtube</option>
+                    <option value="Tiktok">Tiktok</option>
+                    <option value="Referencia de Familiares">Referencia de Familiares</option>
+                    <option value="Referencia de Amigos">Referencia de Amigos</option>
+                </select>
+            </div>
+
+            <!-- Campo Situación Laboral -->
+            <div class="mb-3">
+                <label for="situacion_laboral" class="form-label">Situación Laboral</label>
+                <select class="form-select" id="situacion_laboral" name="situacion_laboral" required>
+                    <option value="" disabled selected>Selecciona tu situación laboral</option>
+                    <option value="No trabaja">No trabaja</option>
+                    <option value="Dependiente">Dependiente (Trabaja en una empresa)</option>
+                    <option value="Independiente">Independiente (Tiene su propio emprendimiento)</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <input type="text" class="form-control mt-2 d-none" id="situacion_otro" name="situacion_otro" placeholder="Especifica tu situación laboral">
+            </div>
+
+            <!-- Campo ¿Quién influyó en tu decisión de estudiar en Neumann? -->
+            <div class="mb-3">
+                <label for="influencia" class="form-label">¿Quién influyó en tu decisión de estudiar en Neumann?</label>
+                <select class="form-select" id="influencia" name="influencia" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="Mamá">Mamá</option>
+                    <option value="Papá">Papá</option>
+                    <option value="Yo">Yo</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <input type="text" class="form-control mt-2 d-none" id="influencia_otro" name="influencia_otro" placeholder="Especifica quién influyó">
+            </div>
+            <!-- Campo Nombre y DNI del Apoderado -->
+            <div class="mb-3">
+                <label for="apoderado" class="form-label">Nombre y DNI del Apoderado (Obligatorio para estudiantes menores de edad)</label>
+                <input type="text" class="form-control" id="apoderado" name="apoderado" placeholder="Nombre y DNI del Apoderado" required>
+            </div>
+
+            <!-- Políticas de privacidad -->
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="politicas" name="politicas" required>
+                <label for="politicas" class="form-check-label">
+                    Acepto las políticas de privacidad.
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-purple w-100">Enviar</button>
+        </form>
+
+        <p id="respuesta" class="text-center mt-3" style="color: green;"></p>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const form = document.getElementById('loginForm');
-        const mensaje = document.getElementById('mensaje');
+    const form = document.getElementById('inscripcion-form');
+    const respuesta = document.getElementById('respuesta');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    // Configuración para todos los campos con "Otro"
+    const fieldsWithOther = [
+        { selectId: 'ciudad_residencia', inputId: 'ciudad_otro' },
+        { selectId: 'distrito', inputId: 'distrito_otro' },
+        { selectId: 'ciudad_colegio', inputId: 'ciudad_colegiootro' },
+        { selectId: 'situacion_laboral', inputId: 'situacion_otro' },
+        { selectId: 'influencia', inputId: 'influencia_otro' },
+    ];
 
-            const usuario = document.getElementById("usuario").value;
-            const password = document.getElementById("password").value;
-            
-            mensaje.innerHTML = "Validando...";
-
-            try {
-                const response = await fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ usuario, password })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    mensaje.innerHTML = `<span class="text-success">✅ Acceso concedido. Redirigiendo...</span>`;
-                    setTimeout(() => {
-                        window.location.href = data.role === "admin" ? "index2.html" : "indexusuario.html";
-                    }, 1500);
-                } else {
-                    mensaje.innerHTML = `<span class="text-danger">❌ Credenciales incorrectas</span>`;
-                }
-            } catch (error) {
-                mensaje.innerHTML = `<span class="text-danger">⚠️ Error de conexión</span>`;
-                console.error("Error:", error);
+    // Función para gestionar el campo "Otro"
+    const handleOtherField = (selectElement, inputElement) => {
+        selectElement.addEventListener('change', (e) => {
+            if (e.target.value.toLowerCase() === 'otro') {
+                inputElement.classList.remove('d-none');
+                inputElement.setAttribute('required', 'required');
+            } else {
+                inputElement.classList.add('d-none');
+                inputElement.removeAttribute('required');
             }
         });
-    </script>
+    };
+
+    // Asocia cada campo "Otro" con su comportamiento
+    fieldsWithOther.forEach(({ selectId, inputId }) => {
+        const selectElement = document.getElementById(selectId);
+        const inputElement = document.getElementById(inputId);
+        handleOtherField(selectElement, inputElement);
+    });
+
+    // Envío del formulario
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                respuesta.textContent = 'Formulario enviado con éxito.';
+                respuesta.style.color = 'green';
+                form.reset();
+
+                // Resetear los campos "Otro"
+                fieldsWithOther.forEach(({ inputId }) => {
+                    const inputElement = document.getElementById(inputId);
+                    inputElement.classList.add('d-none');
+                });
+            } else {
+                respuesta.textContent = 'Error al enviar el formulario.';
+                respuesta.style.color = 'red';
+            }
+        } catch (error) {
+            respuesta.textContent = 'Error de conexión.';
+            respuesta.style.color = 'red';
+            console.error(error);
+        }
+    });
+</script>
+
 </body>
-</html>
+</html>                   
