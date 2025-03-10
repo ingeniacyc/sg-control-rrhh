@@ -72,6 +72,7 @@
                             <span class="d-lg-flex flex-column gap-1 d-none">
                                 <h5 class="my-0"><span id="nombreUsuario"></span></h5>
                                 <h6 class="my-0 fw-normal"><span id="tipousuario"></span></h6>
+                                 <h6 class="my-0 fw-normal"><span id="dniusuario"></span></h6>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
@@ -179,9 +180,6 @@
                                                 </div>
                                                 <div class="col">
                                                     <div>
-                                                        <h4 class="mt-1 mb-1 text-white"><span id="nombreUsuario"></span></h4>
-                                                        <p class="font-13 text-white-50"><span id="tipoUsuario"></span></p>
-                                                        <p class="font-13 text-white-50"><span id="dniUsuario"></span></p>
 
                                                         <ul class="mb-0 list-inline text-light">
                                                             <li class="list-inline-item me-3">
@@ -220,7 +218,6 @@
                            <h3><strong>Registro de Horario Laboral</strong></h3>
                            <form id="horario-form">
                                <!-- Campo oculto para almacenar el DNI del usuario logueado -->
-                                <input type="text" id="dniUsuario" name="dniUsuario">
                                       <div class="mb-3">
                                           <label class="form-label">Días de Trabajo</label><br>
                                           <input type="checkbox" name="dias" value="Lunes"> Lunes
@@ -315,7 +312,7 @@
                 const usuario = JSON.parse(usuarioData);
                 document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
                 document.getElementById("tipousuario").textContent = usuario.rol || "Sin rol";
-                document.getElementById("dniUsuario").value = usuario.dni || "";
+                document.getElementById("dniusuario").value = usuario.dni || "";
             } catch (error) {
                 console.error("Error al parsear JSON:", error);
                 document.getElementById("nombreUsuario").textContent = "Invitado";
