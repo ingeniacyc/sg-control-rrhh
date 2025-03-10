@@ -33,7 +33,7 @@
         let dataTableHorarios;
 
         function obtenerHorarios() {
-            fetch('https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/execT')
+            fetch('https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec?action=obtenerHorarios')
                 .then(response => response.json())
                 .then(data => renderizarTablaHorarios(data))
                 .catch(error => console.error('Error al obtener los datos:', error));
