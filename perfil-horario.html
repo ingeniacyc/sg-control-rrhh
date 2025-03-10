@@ -322,20 +322,6 @@
         document.getElementById("horario-form").addEventListener("submit", function(event) {
             event.preventDefault();
 
-            let dniUsuario = localStorage.getItem("dniUsuario");
-
-            // Muestra el dniUsuario en un SweetAlert antes de validar
-            Swal.fire({
-                title: "Verificación de usuario",
-                text: `DNI obtenido: ${dniUsuario || "No encontrado"}`,
-                icon: dniUsuario ? "info" : "warning",
-                confirmButtonColor: "#3085d6"
-            });
-    
-            if (dniUsuario) {
-                document.getElementById("dniHidden").value = dniUsuario;
-            }
-
             let horarioEntrada = document.getElementById("horarioEntrada").value.trim();
             let horarioSalida = document.getElementById("horarioSalida").value.trim();
 
