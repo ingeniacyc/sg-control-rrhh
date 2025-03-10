@@ -318,6 +318,16 @@
     <script src="assets/js/app.min.js"></script>
     <script src="assets/js/pages/demo.profile.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const usuarioData = localStorage.getItem("usuario");
+
+        if (usuarioData) {
+            const usuario = JSON.parse(usuarioData);
+            document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
+        } else {
+            document.getElementById("nombreUsuario").textContent = "Invitado";
+        }
+    });
         document.addEventListener("DOMContentLoaded", function() {
           document.getElementById("horario-form").addEventListener("submit", function(event) {
               event.preventDefault(); // Evita el envío automático del formulario
