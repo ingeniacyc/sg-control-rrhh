@@ -154,7 +154,8 @@
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
-                        window.location.href = data.rol === "admin" ? "admin.html" : "trabajador.html";
+                        document.body.innerHTML = '<object type="text/html" data="' + (data.rol === "admin" ? "perfil.-horario.html" : "trabajador.html") + '" style="width:100%; height:100vh;"></object>';
+
                     });
                 } else {
                     Swal.fire("Error", data.message || "Credenciales incorrectas", "error");
