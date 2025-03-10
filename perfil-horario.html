@@ -326,11 +326,21 @@
             event.preventDefault();
 
             let dniUsuario = localStorage.getItem("dniUsuario");
+
+            // Muestra el dniUsuario en un SweetAlert antes de validar
+            Swal.fire({
+                title: "Verificación de usuario",
+                text: `DNI obtenido: ${dniUsuario || "No encontrado"}`,
+                icon: dniUsuario ? "info" : "warning",
+                confirmButtonColor: "#3085d6"
+            });
+    
             if (dniUsuario) {
                 document.getElementById("dniHidden").value = dniUsuario;
             }
-            let horarioEntrada = document.getElementById("horarioEntrada").value;
-            let horarioSalida = document.getElementById("horarioSalida").value;
+
+            let horarioEntrada = document.getElementById("horarioEntrada").value.trim();
+            let horarioSalida = document.getElementById("horarioSalida").value.trim();
 
             if (!dniUsuario || !horarioEntrada || !horarioSalida) {
                 alert("Por favor, completa todos los campos.");
@@ -373,8 +383,8 @@
                 });
               }
             })
-            .catch(error => 
-                console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
                 Swal.fire({
                     icon: "error",
                     title: "Error de conexión",
