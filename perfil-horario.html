@@ -313,20 +313,17 @@
         const usuarioData = localStorage.getItem("usuario");
 
         if (usuarioData) {
+        try {
             const usuario = JSON.parse(usuarioData);
-            const nombreUsuarioEl = document.getElementById("nombreUsuario");
-            const tipoUsuarioEl = document.getElementById("tipousuario");
-
-            if (nombreUsuarioEl) {
-                nombreUsuarioEl.textContent = usuario.nombre || "Usuario";
-            }
-
-            if (tipoUsuarioEl) {
-                tipoUsuarioEl.textContent = usuario.rol || "Sin rol";
-            }
-        } else {
+            document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
+            document.getElementById("tipousuario").textContent = usuario.rol || "Sin rol";
+        } catch (error) {
+            console.error("Error al parsear JSON:", error);
             document.getElementById("nombreUsuario").textContent = "Invitado";
         }
+    } else {
+        document.getElementById("nombreUsuario").textContent = "Invitado";
+    }
 
         // Función para manejar el formulario de horarios
         document.getElementById("horario-form").addEventListener("submit", function(event) {
