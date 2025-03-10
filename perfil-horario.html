@@ -241,21 +241,21 @@
 
                               <div class="p-4 mb-4 shadow rounded bg-white"style="padding:20px;">
                                 <div class="table-responsive">
-                                <table id="exampleIngresos" class="table table-striped" style="width:100%">
-                                  <thead>
-                                      <tr>
-                                          <th>N°</th>
-                                          <th>Fecha</th>
-                                          <th>Nombre o Razon Social</th>
-                                          <th>Descripción de Concepto</th>
-                                          <th>Detalle de Operación</th>
-                                          <th>Ingreso</th>
-                                          <th>Acciones</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                  </tbody>
-                                </table>
+                                    <table id="tablaHorarios" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Usuario</th>
+                                                <th>Día</th>
+                                                <th>Hora Entrada</th>
+                                                <th>Hora Salida</th>
+                                                <th>Fecha Registro</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+
                                 </div>
                               </div>
 
@@ -304,6 +304,7 @@
     <script src="assets/js/pages/demo.profile.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
+        
         // Obtener datos del usuario de localStorage
         const usuarioData = localStorage.getItem("usuario");
 
@@ -325,6 +326,8 @@
             document.getElementById("nombreUsuario").textContent = "Invitado";
         }
 
+        cargarHorarios();
+
         // Función para manejar el formulario de horarios
         document.getElementById("horario-form").addEventListener("submit", function(event) {
             event.preventDefault();
@@ -345,61 +348,121 @@
             // Asignar el DNI al campo oculto en el formulario
             document.getElementById("dniHidden").value = dniUsuario;
             
-            let horarioEntrada = document.getElementById("horarioEntrada").value.trim();
-            let horarioSalida = document.getElementById("horarioSalida").value.trim();
-
-            if (!dniUsuario || !horarioEntrada || !horarioSalida) {
-                alert("Por favor, completa todos los campos.");
-                return;
-            }
-
-            let diasSeleccionados = [];
-            document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
-                diasSeleccionados.push(checkbox.value);
-            });
-
-            let dias = diasSeleccionados.join(", ");
-
-            let formData = new FormData();
-            formData.append("action", "registroHorario");
-            formData.append("usuario", dniUsuario);
-            formData.append("dias", dias);
-            formData.append("horarioEntrada", horarioEntrada);
-            formData.append("horarioSalida", horarioSalida);
-
-            fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                    icon: "success",
-                    title: "Horario registrado",
-                    text: "Tu horario se ha guardado correctamente.",
-                    confirmButtonColor: "#3085d6"
+                    let horarioEntrada = document.getElementById("horarioEntrada").value.trim();
+                    let horarioSalida = document.getElementById("horarioSalida").value.trim();
+        
+                    if (!dniUsuario || !horarioEntrada || !horarioSalida) {
+                        alert("Por favor, completa todos los campos.");
+                        return;
+                    }
+        
+                    let diasSeleccionados = [];
+                    document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
+                        diasSeleccionados.push(checkbox.value);
+                    });
+        
+                    let dias = diasSeleccionados.join(", ");
+        
+                    let formData = new FormData();
+                    formData.append("action", "registroHorario");
+                    formData.append("usuario", dniUsuario);
+                    formData.append("dias", dias);
+                    formData.append("horarioEntrada", horarioEntrada);
+                    formData.append("horarioSalida", horarioSalida);
+        
+                    fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                            icon: "success",
+                            title: "Horario registrado",
+                            text: "Tu horario se ha guardado correctamente.",
+                            confirmButtonColor: "#3085d6"
+                        });
+                        } else {
+                             Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: data.message || "Hubo un problema al registrar el horario.",
+                            confirmButtonColor: "#d33"
+                        });
+                      }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error de conexión",
+                            text: "No se pudo conectar con el servidor. Inténtalo nuevamente.",
+                            confirmButtonColor: "#d33"
+                    });
                 });
-                } else {
-                     Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: data.message || "Hubo un problema al registrar el horario.",
-                    confirmButtonColor: "#d33"
-                });
-              }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                Swal.fire({
-                    icon: "error",
-                    title: "Error de conexión",
-                    text: "No se pudo conectar con el servidor. Inténtalo nuevamente.",
-                    confirmButtonColor: "#d33"
             });
         });
-    });
-});
+
+        // ---------------------------------
+
+        function cargarHorarios() {
+            fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec?action=obtenerHorarios")
+            .then(response => response.json())
+            .then(datos => {
+                renderizarTablaHorarios(datos);
+            })
+            .catch(error => console.error("Error al obtener los horarios:", error));
+        }
+
+        let dataTableHorarios;
+
+        function renderizarTablaHorarios(datos) {
+            if (!dataTableHorarios) {
+                // Inicializa DataTable
+                dataTableHorarios = new DataTable('#tablaHorarios', {
+                    paging: true,
+                    searching: true,
+                    info: true,
+                    destroy: true,
+                    order: [[0, "desc"]],
+                    language: {
+                        lengthMenu: "Mostrar _MENU_ registros por página",
+                        zeroRecords: "No se encontraron registros",
+                        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                        infoEmpty: "No hay registros disponibles",
+                        infoFiltered: "(filtrado de _MAX_ registros en total)",
+                        search: "Buscar:",
+                        paginate: {
+                            first: "Primero",
+                            last: "Último",
+                            next: "Siguiente",
+                            previous: "Anterior"
+                        }
+                    }
+                });
+            } else {
+                dataTableHorarios.clear();
+            }
+        
+            // Agregar filas dinámicamente
+            const newRows = datos.map((fila) => [
+                fila.id,
+                fila.usuario,
+                fila.dia,
+                fila.entrada,
+                fila.salida,
+                fila.fecha,
+                `<button class="btn btn-warning btn-sm" onclick="editarHorario(${fila.id})"><i class="fas fa-edit"></i></button>
+                 <button class="btn btn-danger btn-sm" onclick="eliminarHorario(${fila.id})"><i class="fas fa-trash-alt"></i></button>`
+            ]);
+        
+            dataTableHorarios.rows.add(newRows).draw();
+        }
+
+
+
+        
 </script>
 
 
