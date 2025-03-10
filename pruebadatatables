@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horarios</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Lista de Horarios</h2>
+        <table id="tablaHorarios" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Usuario</th>
+                    <th>Día</th>
+                    <th>Hora Entrada</th>
+                    <th>Hora Salida</th>
+                    <th>Fecha Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos se insertarán aquí dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec?action=obtenerHorarios")
+                .then(response => response.json())
+                .then(datos => {
+                    let tbody = document.querySelector("#tablaHorarios tbody");
+                    tbody.innerHTML = "";
+                    
+                    datos.forEach((horario, index) => {
+                        let fila = `<tr>
+                            <td>${index + 1}</td>
+                            <td>${horario.usuario}</td>
+                            <td>${horario.dia}</td>
+                            <td>${horario.horaEntrada}</td>
+                            <td>${horario.horaSalida}</td>
+                            <td>${horario.fechaRegistro}</td>
+                        </tr>`;
+                        tbody.innerHTML += fila;
+                    });
+                    
+                    new DataTable("#tablaHorarios");
+                })
+                .catch(error => console.error("Error al obtener los horarios:", error));
+        });
+    </script>
+</body>
+</html>
