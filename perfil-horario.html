@@ -36,23 +36,13 @@
 
                     <!-- Topbar Brand Logo -->
                     <div class="logo-topbar">
-                        <!-- Logo light -->
-                        <a href="index.html" class="logo-light">
-                            <span class="logo-lg">
-                                <img src="assets/images/logo.png" alt="logo">
-                            </span>
-                            <span class="logo-sm">
-                                <img src="assets/images/logo-sm.png" alt="small logo">
-                            </span>
-                        </a>
-
                         <!-- Logo Dark -->
                         <a href="index.html" class="logo-dark">
                             <span class="logo-lg">
-                                <img src="assets/images/logo-dark.png" alt="dark logo">
+                                <img src="https://ingeniacyc.com/wp-content/uploads/2020/09/logo-ingenia.png" alt="dark logo">
                             </span>
                             <span class="logo-sm">
-                                <img src="assets/images/logo-dark-sm.png" alt="small logo">
+                                <img src="assets/fonts/LOGOicon.svg" alt="small logo">
                             </span>
                         </a>
                     </div>
@@ -318,61 +308,70 @@
     <script src="assets/js/app.min.js"></script>
     <script src="assets/js/pages/demo.profile.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtener datos del usuario de localStorage
         const usuarioData = localStorage.getItem("usuario");
 
         if (usuarioData) {
             const usuario = JSON.parse(usuarioData);
-            document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
+            const nombreUsuarioEl = document.getElementById("nombreUsuario");
+            const tipoUsuarioEl = document.getElementById("tipousuario");
+
+            if (nombreUsuarioEl) {
+                nombreUsuarioEl.textContent = usuario.nombre || "Usuario";
+            }
+
+            if (tipoUsuarioEl) {
+                tipoUsuarioEl.textContent = usuario.rol || "Sin rol";
+            }
         } else {
             document.getElementById("nombreUsuario").textContent = "Invitado";
         }
+
+        // Función para manejar el formulario de horarios
+        document.getElementById("horario-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let usuario = document.getElementById("nombre").value;
+            let horarioEntrada = document.getElementById("horarioEntrada").value;
+            let horarioSalida = document.getElementById("horarioSalida").value;
+
+            if (!usuario || !horarioEntrada || !horarioSalida) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
+            let diasSeleccionados = [];
+            document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
+                diasSeleccionados.push(checkbox.value);
+            });
+
+            let dias = diasSeleccionados.join(", ");
+
+            let formData = new FormData();
+            formData.append("action", "registroHorario");
+            formData.append("usuario", usuario);
+            formData.append("dias", dias);
+            formData.append("horarioEntrada", horarioEntrada);
+            formData.append("horarioSalida", horarioSalida);
+
+            fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Horario registrado correctamente");
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
     });
-        document.addEventListener("DOMContentLoaded", function() {
-          document.getElementById("horario-form").addEventListener("submit", function(event) {
-              event.preventDefault(); // Evita el envío automático del formulario
-    
-              let usuario = document.getElementById("nombre").value;
-              let horarioEntrada = document.getElementById("horarioEntrada").value;
-              let horarioSalida = document.getElementById("horarioSalida").value;
-    
-              // Verificar si los valores están vacíos
-              if (!usuario || !horarioEntrada || !horarioSalida) {
-                  alert("Por favor, completa todos los campos.");
-                  return;
-              }
-    
-              // Obtener los días seleccionados
-              let diasSeleccionados = [];
-              document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
-                  diasSeleccionados.push(checkbox.value);
-              });
-    
-              let dias = diasSeleccionados.join(", ");
-    
-              let formData = new FormData();
-              formData.append("action", "registroHorario");
-              formData.append("usuario", usuario);
-              formData.append("dias", dias);
-              formData.append("horarioEntrada", horarioEntrada);
-              formData.append("horarioSalida", horarioSalida);
-    
-              fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
-                  method: "POST",
-                  body: formData
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      alert("Horario registrado correctamente");
-                  } else {
-                      alert(data.message);
-                  }
-              })
-              .catch(error => console.error("Error:", error));
-          });
-      });
-    </script>
+</script>
+
 
 </body>
 
