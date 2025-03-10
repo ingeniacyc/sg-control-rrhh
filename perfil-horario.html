@@ -313,8 +313,6 @@
                 const usuario = JSON.parse(usuarioData);
                 document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
                 document.getElementById("tipousuario").textContent = usuario.rol || "Sin rol";
-                document.getElementById("dniusuario").textContent = usuario.dni || "";
-                document.getElementById("dniHidden").value = usuario.dni || "";
             } catch (error) {
                 console.error("Error al parsear JSON:", error);
                 document.getElementById("nombreUsuario").textContent = "Invitado";
@@ -327,10 +325,12 @@
         document.getElementById("horario-form").addEventListener("submit", function(event) {
             event.preventDefault();
 
-            let dniUsuario = localStorage.getItem("dniusuario"); // Recupera el DNI del localStorage
+            document.addEventListener("DOMContentLoaded", function () {
+            let dniUsuario = localStorage.getItem("dniUsuario");
             if (dniUsuario) {
-                document.getElementById("dniHidden").value = dniUsuario; // Asigna el valor al hidden
+                document.getElementById("dniHidden").value = dniUsuario;
             }
+
             let horarioEntrada = document.getElementById("horarioEntrada").value;
             let horarioSalida = document.getElementById("horarioSalida").value;
 
@@ -348,7 +348,7 @@
 
             let formData = new FormData();
             formData.append("action", "registroHorario");
-            formData.append("usuario", dni);
+            formData.append("usuario", dniUsuario);
             formData.append("dias", dias);
             formData.append("horarioEntrada", horarioEntrada);
             formData.append("horarioSalida", horarioSalida);
