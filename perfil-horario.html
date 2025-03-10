@@ -72,7 +72,6 @@
                             <span class="d-lg-flex flex-column gap-1 d-none">
                                 <h5 class="my-0"><span id="nombreUsuario"></span></h5>
                                 <h6 class="my-0 fw-normal"><span id="tipousuario"></span></h6>
-                                 <h6 class="my-0 fw-normal"><span id="dniusuario"></span></h6>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
@@ -335,7 +334,7 @@
             let horarioEntrada = document.getElementById("horarioEntrada").value;
             let horarioSalida = document.getElementById("horarioSalida").value;
 
-            if (!dni || !horarioEntrada || !horarioSalida) {
+            if (!dniUsuario || !horarioEntrada || !horarioSalida) {
                 alert("Por favor, completa todos los campos.");
                 return;
             }
