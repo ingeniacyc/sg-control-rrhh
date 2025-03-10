@@ -318,50 +318,62 @@
     <script src="assets/js/app.min.js"></script>
     <script src="assets/js/pages/demo.profile.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("horario-form").addEventListener("submit", function(event) {
-          event.preventDefault(); // Evita el envío automático del formulario
+        document.addEventListener("DOMContentLoaded", function() {
+        // Recuperar los datos del usuario desde localStorage
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        
+        if (usuario) {
+            document.getElementById("nombreUsuario").textContent = usuario.nombre;
+        } else {
+            // Si no hay datos, redirigir al login
+            window.location.href = "https://ingeniacyc.github.io/sg-control-rrhh/index.html";
+            return; // Detiene la ejecución para evitar errores
+        }
+    
+        // Manejar el envío del formulario
+        document.getElementById("horario-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evita el envío automático del formulario
+    
+            let horarioEntrada = document.getElementById("horarioEntrada").value;
+            let horarioSalida = document.getElementById("horarioSalida").value;
+    
+            // Verificar si los valores están vacíos
+            if (!horarioEntrada || !horarioSalida) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+    
+            // Obtener los días seleccionados
+            let diasSeleccionados = [];
+            document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
+                diasSeleccionados.push(checkbox.value);
+            });
+    
+            let dias = diasSeleccionados.join(", ");
+    
+            let formData = new FormData();
+            formData.append("action", "registroHorario");
+            formData.append("usuario", usuario.nombre); // Aquí se usa el nombre del usuario logueado
+            formData.append("dias", dias);
+            formData.append("horarioEntrada", horarioEntrada);
+            formData.append("horarioSalida", horarioSalida);
+    
+            fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Horario registrado correctamente");
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    });
 
-          let usuario = document.getElementById("nombre").value;
-          let horarioEntrada = document.getElementById("horarioEntrada").value;
-          let horarioSalida = document.getElementById("horarioSalida").value;
-
-          // Verificar si los valores están vacíos
-          if (!usuario || !horarioEntrada || !horarioSalida) {
-              alert("Por favor, completa todos los campos.");
-              return;
-          }
-
-          // Obtener los días seleccionados
-          let diasSeleccionados = [];
-          document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
-              diasSeleccionados.push(checkbox.value);
-          });
-
-          let dias = diasSeleccionados.join(", ");
-
-          let formData = new FormData();
-          formData.append("action", "registroHorario");
-          formData.append("usuario", usuario);
-          formData.append("dias", dias);
-          formData.append("horarioEntrada", horarioEntrada);
-          formData.append("horarioSalida", horarioSalida);
-
-          fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
-              method: "POST",
-              body: formData
-          })
-          .then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert("Horario registrado correctamente");
-              } else {
-                  alert(data.message);
-              }
-          })
-          .catch(error => console.error("Error:", error));
-      });
-  });
 
     </script>
 
