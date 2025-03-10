@@ -213,10 +213,10 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-
                           <div class="p-4 mb-4 shadow rounded bg-white">
                            <h3><strong>Registro de Horario Laboral</strong></h3>
                            <form id="horario-form">
+                               <input type="hidden" id="dniHidden" name="dni">
                                <!-- Campo oculto para almacenar el DNI del usuario logueado -->
                                       <div class="mb-3">
                                           <label class="form-label">Días de Trabajo</label><br>
@@ -312,7 +312,8 @@
                 const usuario = JSON.parse(usuarioData);
                 document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
                 document.getElementById("tipousuario").textContent = usuario.rol || "Sin rol";
-                document.getElementById("dniusuario").value = usuario.dni || "";
+                document.getElementById("dniusuario").textContent = usuario.dni || "";
+                document.getElementById("dniHidden").value = usuario.dni || "";
             } catch (error) {
                 console.error("Error al parsear JSON:", error);
                 document.getElementById("nombreUsuario").textContent = "Invitado";
@@ -325,7 +326,10 @@
         document.getElementById("horario-form").addEventListener("submit", function(event) {
             event.preventDefault();
 
-            let dni = document.getElementById("dniUsuario").value;
+            let dniUsuario = localStorage.getItem("dniusuario"); // Recupera el DNI del localStorage
+            if (dniUsuario) {
+                document.getElementById("dniHidden").value = dniUsuario; // Asigna el valor al hidden
+            }
             let horarioEntrada = document.getElementById("horarioEntrada").value;
             let horarioSalida = document.getElementById("horarioSalida").value;
 
