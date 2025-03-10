@@ -155,7 +155,12 @@
                         showConfirmButton: false
                     }).then(() => {
                         // Guarda los datos del usuario en localStorage
-                            localStorage.setItem("usuario", JSON.stringify(data.usuario));
+                            localStorage.setItem("usuario", JSON.stringify({
+                                nombre: data.nombre,
+                                apellido: data.apellido,
+                                dni: data.dni,
+                                rol: data.rol
+                            }));
                         if (data.rol === "admin") {
                             window.location.href = "perfil-horario.html";
                         } else {
