@@ -39,7 +39,7 @@
                         <!-- Logo Dark -->
                         <a href="index.html" class="logo-dark">
                             <span class="logo-lg">
-                                <img src="https://ingeniacyc.com/wp-content/uploads/2020/09/logo-ingenia.png" alt="dark logo">
+                                <img src="assets/fonts/LOGOINGENIA.svg" alt="dark logo">
                             </span>
                             <span class="logo-sm">
                                 <img src="assets/fonts/LOGOicon.svg" alt="small logo">
@@ -218,10 +218,8 @@
                           <div class="p-4 mb-4 shadow rounded bg-white">
                            <h3><strong>Registro de Horario Laboral</strong></h3>
                            <form id="horario-form">
-                                      <div class="mb-3">
-                                          <label for="nombre" class="form-label">Nombre</label>
-                                          <input type="text" class="form-control" id="nombre" name="nombreUsuario" required>
-                                      </div>
+                               <!-- Campo oculto para almacenar el DNI del usuario logueado -->
+                                <input type="hidden" id="dniUsuario" name="dniUsuario">
                                       <div class="mb-3">
                                           <label class="form-label">Días de Trabajo</label><br>
                                           <input type="checkbox" name="dias" value="Lunes"> Lunes
@@ -241,7 +239,6 @@
                                     </div>
                                       <button type="submit" class="btn btn-primary">Registrar</button>
                                   </form>
-
                               </div>
 
                               <div class="p-4 mb-4 shadow rounded bg-white"style="padding:20px;">
@@ -313,27 +310,28 @@
         const usuarioData = localStorage.getItem("usuario");
 
         if (usuarioData) {
-        try {
-            const usuario = JSON.parse(usuarioData);
-            document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
-            document.getElementById("tipousuario").textContent = usuario.rol || "Sin rol";
-        } catch (error) {
-            console.error("Error al parsear JSON:", error);
+            try {
+                const usuario = JSON.parse(usuarioData);
+                document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
+                document.getElementById("tipousuario").textContent = usuario.rol || "Sin rol";
+                document.getElementById("dniUsuario").value = usuario.dni || "";
+            } catch (error) {
+                console.error("Error al parsear JSON:", error);
+                document.getElementById("nombreUsuario").textContent = "Invitado";
+            }
+        } else {
             document.getElementById("nombreUsuario").textContent = "Invitado";
         }
-    } else {
-        document.getElementById("nombreUsuario").textContent = "Invitado";
-    }
 
         // Función para manejar el formulario de horarios
         document.getElementById("horario-form").addEventListener("submit", function(event) {
             event.preventDefault();
 
-            let usuario = document.getElementById("nombre").value;
+            let dni = document.getElementById("dniUsuario").value;
             let horarioEntrada = document.getElementById("horarioEntrada").value;
             let horarioSalida = document.getElementById("horarioSalida").value;
 
-            if (!usuario || !horarioEntrada || !horarioSalida) {
+            if (!dni || !horarioEntrada || !horarioSalida) {
                 alert("Por favor, completa todos los campos.");
                 return;
             }
@@ -347,7 +345,7 @@
 
             let formData = new FormData();
             formData.append("action", "registroHorario");
-            formData.append("usuario", usuario);
+            formData.append("usuario", dni);
             formData.append("dias", dias);
             formData.append("horarioEntrada", horarioEntrada);
             formData.append("horarioSalida", horarioSalida);
