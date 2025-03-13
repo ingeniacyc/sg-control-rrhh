@@ -3,10 +3,14 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Sistema Gestión Asistencia-</title>
+    <title>Sistema Gestión Asistencia</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Estilos de DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.bootstrap5.css">
 
@@ -14,26 +18,32 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.bootstrap5.js"></script>
-
 </head>
-<body>
-    <h2>Registro de Horarios</h2>
-    <table id="tabla-horarios" class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Día</th>
-                <th>Horario Entrada</th>
-                <th>Horario Salida</th>
-                <th>Hora Registro</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
 
-     <script>
-        $(document).ready(function() {
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Registro de Horarios</h2>
+        <div class="card shadow">
+            <div class="card-body">
+                <table id="tabla-horarios" class="table table-striped table-hover" style="width:100%">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Día</th>
+                            <th>Horario Entrada</th>
+                            <th>Horario Salida</th>
+                            <th>Hora Registro</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
             // URL de tu aplicación web de Google Apps Script
             let url = "https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec";
 
@@ -69,7 +79,7 @@
                             { data: "Hora Registro" }
                         ],
                         language: {
-                            url: "//cdn.datatables.net/plug-ins/2.2.1/i18n/es-ES.json" 
+                            url: "//cdn.datatables.net/plug-ins/2.2.1/i18n/es-ES.json"
                         }
                     });
                 })
@@ -90,6 +100,7 @@
             }
             return hora; // Si no es un formato reconocido, devuelve el valor original
         }
+
         // Función para formatear la fecha y hora a dd/mm/YYYY HH:mm:ss
         function formatearFechaHora(fechaHora) {
             if (fechaHora instanceof Date) {
@@ -119,5 +130,9 @@
             return fechaHora; // Si no es un formato reconocido, devuelve el valor original
         }
     </script>
+
+    <!-- Bootstrap 5 JS (opcional, solo si necesitas funcionalidades de Bootstrap) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
