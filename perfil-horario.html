@@ -303,7 +303,6 @@
     <script src="assets/js/pages/demo.profile.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
-        
         // Obtener datos del usuario de localStorage
         const usuarioData = localStorage.getItem("usuario");
 
@@ -316,7 +315,6 @@
                 if (usuario.dni) {
                     localStorage.setItem("dniUsuario", usuario.dni);
                 }
-                
             } catch (error) {
                 console.error("Error al parsear JSON:", error);
                 document.getElementById("nombreUsuario").textContent = "Invitado";
@@ -326,15 +324,15 @@
         }
 
         // Cargar la tabla de horarios
-            cargarTablaHorarios();
+        cargarTablaHorarios();
 
         // Función para manejar el formulario de horarios
-        document.getElementById("horario-form").addEventListener("submit", function(event) {
+        document.getElementById("horario-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
             // Obtener DNI del usuario desde localStorage
             let dniUsuario = localStorage.getItem("dniUsuario");
-        
+
             if (!dniUsuario) {
                 Swal.fire({
                     icon: "warning",
@@ -344,66 +342,69 @@
                 });
                 return;
             }
-        
+
             // Asignar el DNI al campo oculto en el formulario
             document.getElementById("dniHidden").value = dniUsuario;
-            
-                    let horarioEntrada = document.getElementById("horarioEntrada").value.trim();
-                    let horarioSalida = document.getElementById("horarioSalida").value.trim();
-        
-                    if (!dniUsuario || !horarioEntrada || !horarioSalida) {
-                        alert("Por favor, completa todos los campos.");
-                        return;
-                    }
-        
-                    let diasSeleccionados = [];
-                    document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
-                        diasSeleccionados.push(checkbox.value);
-                    });
-        
-                    let dias = diasSeleccionados.join(", ");
-        
-                    let formData = new FormData();
-                    formData.append("action", "registroHorario");
-                    formData.append("usuario", dniUsuario);
-                    formData.append("dias", dias);
-                    formData.append("horarioEntrada", horarioEntrada);
-                    formData.append("horarioSalida", horarioSalida);
-        
-                    fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
+
+            let horarioEntrada = document.getElementById("horarioEntrada").value.trim();
+            let horarioSalida = document.getElementById("horarioSalida").value.trim();
+
+            if (!dniUsuario || !horarioEntrada || !horarioSalida) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
+            let diasSeleccionados = [];
+            document.querySelectorAll("input[name='dias']:checked").forEach((checkbox) => {
+                diasSeleccionados.push(checkbox.value);
+            });
+
+            let dias = diasSeleccionados.join(", ");
+
+            let formData = new FormData();
+            formData.append("action", "registroHorario");
+            formData.append("usuario", dniUsuario);
+            formData.append("dias", dias);
+            formData.append("horarioEntrada", horarioEntrada);
+            formData.append("horarioSalida", horarioSalida);
+
+            fetch("https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
                             icon: "success",
                             title: "Horario registrado",
                             text: "Tu horario se ha guardado correctamente.",
                             confirmButtonColor: "#3085d6"
                         });
-                        } else {
-                             Swal.fire({
+                        // Recargar la tabla después de registrar un horario
+                        cargarTablaHorarios();
+                    } else {
+                        Swal.fire({
                             icon: "error",
                             title: "Error",
                             text: data.message || "Hubo un problema al registrar el horario.",
                             confirmButtonColor: "#d33"
                         });
-                      }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error de conexión",
-                            text: "No se pudo conectar con el servidor. Inténtalo nuevamente.",
-                            confirmButtonColor: "#d33"
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error de conexión",
+                        text: "No se pudo conectar con el servidor. Inténtalo nuevamente.",
+                        confirmButtonColor: "#d33"
                     });
                 });
-            });
-            function cargarTablaHorarios() {
-                // URL de tu aplicación web de Google Apps Script
+        });
+
+        function cargarTablaHorarios() {
+            // URL de tu aplicación web de Google Apps Script
             let url = "https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec";
 
             // Obtiene los datos de la hoja de cálculo
@@ -412,19 +413,21 @@
                 .then(datos => {
                     // Formatea los datos antes de pasarlos a DataTables
                     datos.forEach(registro => {
-                        // Formatea "Horario Entrada" y "Horario Salida" a HH:mm
                         if (registro["Horario Entrada"]) {
                             registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
                         }
                         if (registro["Horario Salida"]) {
                             registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
                         }
-
-                        // Formatea "Hora Registro" a dd/mm/YYYY HH:mm:ss
                         if (registro["Hora Registro"]) {
                             registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
                         }
                     });
+
+                    // Destruye la instancia existente de DataTable si ya está inicializada
+                    if ($.fn.DataTable.isDataTable('#tabla-horarios')) {
+                        $('#tabla-horarios').DataTable().destroy();
+                    }
 
                     // Inicializa DataTables
                     let tabla = $('#tabla-horarios').DataTable({
@@ -438,31 +441,37 @@
                             { data: "Hora Registro" }
                         ],
                         language: {
-                            url: "//cdn.datatables.net/plug-ins/2.2.1/i18n/es-ES.json" 
+                            url: "//cdn.datatables.net/plug-ins/2.2.1/i18n/es-ES.json"
                         }
                     });
                 })
-                .catch(error => console.error("Error al obtener datos:", error));
+                .catch(error => {
+                    console.error("Error al obtener datos:", error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "No se pudieron cargar los datos. Inténtalo nuevamente.",
+                        confirmButtonColor: "#d33"
+                    });
+                });
         }
 
         // Función para formatear la hora a HH:mm
         function formatearHora(hora) {
             if (hora instanceof Date) {
-                // Si es un objeto Date, formatea a HH:mm
                 return hora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
             } else if (typeof hora === 'string') {
-                // Si es una cadena en formato ISO (1899-12-30T19:13:36.000Z), convierte a Date y luego formatea
                 let fechaHora = new Date(hora);
                 if (!isNaN(fechaHora.getTime())) {
                     return fechaHora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
                 }
             }
-            return hora; // Si no es un formato reconocido, devuelve el valor original
+            return hora;
         }
+
         // Función para formatear la fecha y hora a dd/mm/YYYY HH:mm:ss
         function formatearFechaHora(fechaHora) {
             if (fechaHora instanceof Date) {
-                // Si es un objeto Date, formatea a dd/mm/YYYY HH:mm:ss
                 return fechaHora.toLocaleString('es-ES', {
                     day: '2-digit',
                     month: '2-digit',
@@ -472,7 +481,6 @@
                     second: '2-digit'
                 });
             } else if (typeof fechaHora === 'string') {
-                // Si es una cadena en formato ISO (2025-03-10T07:29:56.000Z), convierte a Date y luego formatea
                 let fecha = new Date(fechaHora);
                 if (!isNaN(fecha.getTime())) {
                     return fecha.toLocaleString('es-ES', {
@@ -485,11 +493,9 @@
                     });
                 }
             }
-            return fechaHora; // Si no es un formato reconocido, devuelve el valor original
-            }
-
-        });
-        
+            return fechaHora;
+        }
+    });
 </script>
 
 </body>
