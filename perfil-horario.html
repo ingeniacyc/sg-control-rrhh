@@ -405,70 +405,90 @@
         });
         
 </script>
+<script>
+    $(document).ready(function () {
+        // URL de tu aplicación web de Google Apps Script
+        let url = "https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec";
 
-    <script>
-        $(document).ready(function() {
-            // URL de tu aplicación web de Google Apps Script
-            let url = "https://script.google.com/macros/s/AKfycbzgrJWImhY2AqUQ4t1hb8g5TL51pqgZVn1XqcKL2HWjDMoscwJ9FaqECAsKWR9Hv3MnLg/exec";
+        // Obtiene los datos de la hoja de cálculo
+        fetch(url)
+            .then(response => response.json())
+            .then(datos => {
+                console.log("Datos recibidos:", datos); // Verifica los datos en la consola
 
-            // Obtiene los datos de la hoja de cálculo
-            fetch(url)
-                .then(response => response.json())
-                .then(datos => {
-                    // Formatea los datos antes de pasarlos a DataTables
-                    datos.forEach(registro => {
-                        // Formatea "Horario Entrada" y "Horario Salida" a HH:mm
-                        if (registro["Horario Entrada"]) {
-                            registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
+                // Formatea los datos antes de pasarlos a DataTables
+                datos.forEach(registro => {
+                    // Formatea "Horario Entrada" y "Horario Salida" a HH:mm
+                    if (registro["Horario Entrada"]) {
+                        registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
+                    }
+                    if (registro["Horario Salida"]) {
+                        registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
+                    }
+
+                    // Formatea "Hora Registro" a dd/mm/YYYY HH:mm:ss
+                    if (registro["Hora Registro"]) {
+                        registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
+                    }
+                });
+
+                // Inicializa DataTables
+                $('#tablaHorarios').DataTable({
+                    data: datos,
+                    columns: [
+                        { data: "ID" },
+                        { data: "Usuario" },
+                        { data: "Día" },
+                        { data: "Horario Entrada" },
+                        { data: "Horario Salida" },
+                        { data: "Hora Registro" },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return '<button class="btn btn-sm btn-danger" onclick="eliminarHorario(' + row.ID + ')">Eliminar</button>';
+                            }
                         }
-                        if (registro["Horario Salida"]) {
-                            registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
-                        }
+                    ],
+                    language: {
+                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/Spanish.json"
+                    }
+                });
+            })
+            .catch(error => console.error("Error al obtener datos:", error));
+    });
 
-                        // Formatea "Hora Registro" a dd/mm/YYYY HH:mm:ss
-                        if (registro["Hora Registro"]) {
-                            registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
-                        }
-                    });
-
-                    // Inicializa DataTables
-                    let tabla = $('#tablaHorarios').DataTable({
-                        data: datos,
-                        columns: [
-                            { data: "ID" },
-                            { data: "Usuario" },
-                            { data: "Día" },
-                            { data: "Horario Entrada" },
-                            { data: "Horario Salida" },
-                            { data: "Hora Registro" }
-                        ],
-                        language: {
-                            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/Spanish.json"
-                        }
-                    });
-                })
-                .catch(error => console.error("Error al obtener datos:", error));
-        });
-
-        // Función para formatear la hora a HH:mm
-        function formatearHora(hora) {
-            if (hora instanceof Date) {
-                // Si es un objeto Date, formatea a HH:mm
-                return hora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            } else if (typeof hora === 'string') {
-                // Si es una cadena en formato ISO (1899-12-30T19:13:36.000Z), convierte a Date y luego formatea
-                let fechaHora = new Date(hora);
-                if (!isNaN(fechaHora.getTime())) {
-                    return fechaHora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                }
+    // Función para formatear la hora a HH:mm
+    function formatearHora(hora) {
+        if (hora instanceof Date) {
+            // Si es un objeto Date, formatea a HH:mm
+            return hora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        } else if (typeof hora === 'string') {
+            // Si es una cadena en formato ISO (1899-12-30T19:13:36.000Z), convierte a Date y luego formatea
+            let fechaHora = new Date(hora);
+            if (!isNaN(fechaHora.getTime())) {
+                return fechaHora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
             }
-            return hora; // Si no es un formato reconocido, devuelve el valor original
         }
-        // Función para formatear la fecha y hora a dd/mm/YYYY HH:mm:ss
-        function formatearFechaHora(fechaHora) {
-            if (fechaHora instanceof Date) {
-                // Si es un objeto Date, formatea a dd/mm/YYYY HH:mm:ss
-                return fechaHora.toLocaleString('es-ES', {
+        return hora; // Si no es un formato reconocido, devuelve el valor original
+    }
+
+    // Función para formatear la fecha y hora a dd/mm/YYYY HH:mm:ss
+    function formatearFechaHora(fechaHora) {
+        if (fechaHora instanceof Date) {
+            // Si es un objeto Date, formatea a dd/mm/YYYY HH:mm:ss
+            return fechaHora.toLocaleString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        } else if (typeof fechaHora === 'string') {
+            // Si es una cadena en formato ISO (2025-03-10T07:29:56.000Z), convierte a Date y luego formatea
+            let fecha = new Date(fechaHora);
+            if (!isNaN(fecha.getTime())) {
+                return fecha.toLocaleString('es-ES', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',
@@ -476,23 +496,11 @@
                     minute: '2-digit',
                     second: '2-digit'
                 });
-            } else if (typeof fechaHora === 'string') {
-                // Si es una cadena en formato ISO (2025-03-10T07:29:56.000Z), convierte a Date y luego formatea
-                let fecha = new Date(fechaHora);
-                if (!isNaN(fecha.getTime())) {
-                    return fecha.toLocaleString('es-ES', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    });
-                }
             }
-            return fechaHora; // Si no es un formato reconocido, devuelve el valor original
         }
-    </script>
+        return fechaHora; // Si no es un formato reconocido, devuelve el valor original
+    }
+</script>
 
 </body>
 
