@@ -8,11 +8,21 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
 
+     <!-- Iconos y Fuentes -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Estilos de DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.bootstrap5.css">
+    <link href="assets/css/vendor.min.css" rel="stylesheet" type="text/css" />
+    <!-- Estilos de la aplicación -->
+    <link href="assets/css/app-creative.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+    <!-- Configuración del tema -->
+    <script src="assets/js/hyper-config.js"></script>
 
     <!-- jQuery y DataTables -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -21,6 +31,124 @@
 </head>
 
 <body>
+     <!-- Begin page -->
+    <div class="wrapper">
+
+
+        <!-- ========== Topbar Start ========== -->
+        <div class="navbar-custom">
+            <div class="topbar container-fluid">
+                <div class="d-flex align-items-center gap-lg-2 gap-1">
+
+                    <!-- Topbar Brand Logo -->
+                    <div class="logo-topbar">
+                        <!-- Logo Dark -->
+                        <a href="index.html" class="logo-dark">
+                            <span class="logo-lg">
+                                <img src="assets/fonts/LOGOINGENIA.svg" alt="dark logo">
+                            </span>
+                            <span class="logo-sm">
+                                <img src="assets/fonts/LOGOicon.svg" alt="small logo">
+                            </span>
+                        </a>
+                    </div>
+
+                    <!-- Sidebar Menu Toggle Button -->
+                    <button class="button-toggle-menu">
+                        <i class="mdi mdi-menu"></i>
+                    </button>
+
+                    <!-- Horizontal Menu Toggle Button -->
+                    <button class="navbar-toggle" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                        <div class="lines">
+                            <span></span>
+                        </div>
+                    </button>
+
+
+                </div>
+
+                <ul class="topbar-menu d-flex align-items-center gap-3">
+
+                    <li class="dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                            <span class="account-user-avatar">
+                                <i class="mdi mdi-account-circle mdi-36px me-1"></i>
+                            </span>
+                            <span class="d-lg-flex flex-column gap-1 d-none">
+                                <h5 class="my-0"><span id="nombreUsuario"></span></h5>
+                                <h6 class="my-0 fw-normal"><span id="tipousuario"></span></h6>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
+                            <!-- item-->
+                            <div class=" dropdown-header noti-title">
+                                <h6 class="text-overflow m-0">Bienvenid@!</h6>
+                            </div>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="mdi mdi-account-circle me-1"></i>
+                                <span>Mi cuenta</span>
+                            </a>
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="mdi mdi-logout me-1"></i>
+                                <span>Cerrar Sesión</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- ========== Topbar End ========== -->
+
+
+        <!-- ========== Horizontal Menu Start ========== -->
+        <div class="topnav">
+            <div class="container-fluid">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="collapse navbar-collapse" id="topnav-menu-content">
+                        <ul class="navbar-nav">
+                          <li class="nav-item">
+                            <a class="nav-link btn btn-primary text-white" href="dashboard-analytics.html">
+                                <i class="uil-dashboard"></i> Inicio
+                            </a>
+                          </li>
+
+                          <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-layouts" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="uil-window"></i>Asistencia <div class="arrow-down"></div>
+                              </a>
+                              <div class="dropdown-menu" aria-labelledby="topnav-layouts">
+                                  <a href="layouts-vertical.html" class="dropdown-item" >Horario</a>
+                                  <a href="layouts-detached.html" class="dropdown-item" >Marcaciones</a>
+                              </div>
+                          </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="uil-copy-alt"></i>Justificaciones <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-pages">
+                                    <a href="pages-starter.html" class="dropdown-item">Inasistencias</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-layouts" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="uil-window"></i>Solicitudes <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-layouts">
+                                    <a href="layouts-vertical.html" class="dropdown-item" >Permisos</a>
+                                    <a href="layouts-detached.html" class="dropdown-item" >Vacaciones</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- ========== Horizontal Menu End ========== -->
     <div class="container mt-5">
         <h2 class="mb-4">Registro de Horarios</h2>
         <div class="card shadow">
@@ -130,7 +258,12 @@
             return fechaHora; // Si no es un formato reconocido, devuelve el valor original
         }
     </script>
+    <!-- Vendor JS (librerías de terceros) -->
+    <script src="assets/js/vendor.min.js"></script>
 
+    <!-- Scripts específicos de la app -->
+    <script src="assets/js/app.min.js"></script>
+    <script src="assets/js/pages/demo.profile.js"></script>
     <!-- Bootstrap 5 JS (opcional, solo si necesitas funcionalidades de Bootstrap) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
