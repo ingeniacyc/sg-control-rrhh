@@ -352,18 +352,20 @@
         // Función para manejar el registro de horarios
         function manejarRegistroHorario(event) {
             event.preventDefault();
+            // Obtener datos del formulario
             const dniUsuario = localStorage.getItem("dniUsuario");
-            
             const fechaInicio = document.getElementById("fechaInicio").value;
             const fechaFin = document.getElementById("fechaFin").value;
             const horarioEntrada = document.getElementById("horarioEntrada").value.trim();
             const horarioSalida = document.getElementById("horarioSalida").value.trim();
         
+            // Validar campos obligatorios
             if (!dniUsuario || !fechaInicio || !fechaFin || !horarioEntrada || !horarioSalida) {
                 mostrarError("Por favor, completa todos los campos.");
                 return;
             }
         
+            // Obtener los días seleccionados
             const diasSeleccionados = Array.from(document.querySelectorAll("input[name='dias']:checked"))
                 .map(checkbox => checkbox.value);
         
@@ -371,6 +373,7 @@
                 mostrarError("Por favor, selecciona al menos un día.");
                 return;
             }
+        
             // Calcular las fechas correspondientes a los días seleccionados
             const fechasRegistro = calcularFechasRegistro(fechaInicio, fechaFin, diasSeleccionados);
         
@@ -379,6 +382,7 @@
                 return;
             }
         
+            // Preparar los datos para enviar al servidor
             const formData = new FormData();
             formData.append("action", "registroHorario");
             formData.append("usuario", dniUsuario);
@@ -386,6 +390,7 @@
             formData.append("horarioEntrada", horarioEntrada);
             formData.append("horarioSalida", horarioSalida);
         
+            // Enviar los datos al servidor
             registrarHorario(formData);
         }
         // Función para calcular las fechas de registro
@@ -418,7 +423,6 @@
         
             return fechas;
         }
-
         
         // Función para registrar un horario
         function registrarHorario(formData) {
