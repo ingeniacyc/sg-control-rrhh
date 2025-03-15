@@ -216,7 +216,15 @@
                            <h3><strong>Registro de Horario Laboral</strong></h3>
                            <form id="horario-form">
                               <input type="hidden" id="dniHidden" name="dniUsuario">
-
+                               <!-- Campos para fechas de inicio y fin -->
+                                <div class="mb-3">
+                                    <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fechaFin" class="form-label">Fecha de Fin</label>
+                                    <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
+                                </div>
                                <!-- Campo oculto para almacenar el DNI del usuario logueado -->
                                       <div class="mb-3">
                                           <label class="form-label">Días de Trabajo</label><br>
@@ -247,6 +255,7 @@
                                                 <th>ID</th>
                                                 <th>Usuario</th>
                                                 <th>Día</th>
+                                                <th>Fecha</th>
                                                 <th>Hora Entrada</th>
                                                 <th>Hora Salida</th>
                                                 <th>Fecha Registro</th>
@@ -343,35 +352,73 @@
         // Función para manejar el registro de horarios
         function manejarRegistroHorario(event) {
             event.preventDefault();
-        
             const dniUsuario = localStorage.getItem("dniUsuario");
-        
-            if (!dniUsuario) {
-                mostrarError("No se encontró el DNI del usuario. Inicia sesión nuevamente.");
-                return;
-            }
-        
+            
+            const fechaInicio = document.getElementById("fechaInicio").value;
+            const fechaFin = document.getElementById("fechaFin").value;
             const horarioEntrada = document.getElementById("horarioEntrada").value.trim();
             const horarioSalida = document.getElementById("horarioSalida").value.trim();
         
-            if (!dniUsuario || !horarioEntrada || !horarioSalida) {
+            if (!dniUsuario || !fechaInicio || !fechaFin || !horarioEntrada || !horarioSalida) {
                 mostrarError("Por favor, completa todos los campos.");
                 return;
             }
         
             const diasSeleccionados = Array.from(document.querySelectorAll("input[name='dias']:checked"))
-                .map(checkbox => checkbox.value)
-                .join(", ");
+                .map(checkbox => checkbox.value);
+        
+            if (diasSeleccionados.length === 0) {
+                mostrarError("Por favor, selecciona al menos un día.");
+                return;
+            }
+            // Calcular las fechas correspondientes a los días seleccionados
+            const fechasRegistro = calcularFechasRegistro(fechaInicio, fechaFin, diasSeleccionados);
+        
+            if (fechasRegistro.length === 0) {
+                mostrarError("No hay fechas válidas en el rango seleccionado.");
+                return;
+            }
         
             const formData = new FormData();
             formData.append("action", "registroHorario");
             formData.append("usuario", dniUsuario);
-            formData.append("dias", diasSeleccionados);
+            formData.append("fechas", JSON.stringify(fechasRegistro)); // Enviar las fechas como JSON
             formData.append("horarioEntrada", horarioEntrada);
             formData.append("horarioSalida", horarioSalida);
         
             registrarHorario(formData);
         }
+        // Función para calcular las fechas de registro
+        function calcularFechasRegistro(fechaInicio, fechaFin, diasSeleccionados) {
+            const fechas = [];
+            const inicio = new Date(fechaInicio);
+            const fin = new Date(fechaFin);
+        
+            // Mapear los nombres de los días a números (0 = Domingo, 1 = Lunes, ..., 6 = Sábado)
+            const diasNumericos = {
+                "Domingo": 0,
+                "Lunes": 1,
+                "Martes": 2,
+                "Miércoles": 3,
+                "Jueves": 4,
+                "Viernes": 5,
+                "Sábado": 6
+            };
+        
+            // Recorrer el rango de fechas
+            for (let fecha = inicio; fecha <= fin; fecha.setDate(fecha.getDate() + 1)) {
+                const diaSemana = fecha.getDay(); // Obtener el día de la semana (0-6)
+                const nombreDia = Object.keys(diasNumericos).find(key => diasNumericos[key] === diaSemana);
+        
+                // Si el día está seleccionado, agregar la fecha al array
+                if (diasSeleccionados.includes(nombreDia)) {
+                    fechas.push(fecha.toISOString().split("T")[0]); // Formato YYYY-MM-DD
+                }
+            }
+        
+            return fechas;
+        }
+
         
         // Función para registrar un horario
         function registrarHorario(formData) {
