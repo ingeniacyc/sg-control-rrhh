@@ -450,6 +450,7 @@
                         registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
                         registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
                         registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
+                        registro["fecha"] = formatearFecha(registro["fecha"]); // Formatear la fecha
                     });
         
                     if ($.fn.DataTable.isDataTable('#tabla-horarios')) {
@@ -462,6 +463,7 @@
                             { data: "ID" },
                             { data: "Usuario" },
                             { data: "Día" },
+                            { data: "fecha" }, // Nueva columna: fecha
                             { data: "Horario Entrada" },
                             { data: "Horario Salida" },
                             { data: "Hora Registro" }
@@ -492,29 +494,23 @@
         
         // Función para formatear la fecha y hora a dd/mm/YYYY HH:mm:ss
         function formatearFechaHora(fechaHora) {
-            if (fechaHora instanceof Date) {
-                return fechaHora.toLocaleString('es-ES', {
+            if (fecha instanceof Date) {
+                return fecha.toLocaleDateString('es-ES', {
                     day: '2-digit',
                     month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
+                    year: 'numeric'
                 });
-            } else if (typeof fechaHora === 'string') {
-                const fecha = new Date(fechaHora);
-                if (!isNaN(fecha.getTime())) {
-                    return fecha.toLocaleString('es-ES', {
+            } else if (typeof fecha === 'string') {
+                const fechaObj = new Date(fecha);
+                if (!isNaN(fechaObj.getTime())) {
+                    return fechaObj.toLocaleDateString('es-ES', {
                         day: '2-digit',
                         month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
+                        year: 'numeric'
                     });
                 }
             }
-            return fechaHora;
+            return fecha; // Si no es un formato reconocido, devuelve el valor original
         }
         
         // Función para mostrar mensajes de éxito
