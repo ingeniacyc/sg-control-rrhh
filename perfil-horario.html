@@ -436,6 +436,7 @@
                     if (data.success) {
                         mostrarExito("Horario registrado", "Tu horario se ha guardado correctamente.");
                         cargarTablaHorarios();
+                        resetearFormulario();
                     } else {
                         mostrarError(data.message || "Hubo un problema al registrar el horario.");
                     }
@@ -444,6 +445,10 @@
                     console.error("Error:", error);
                     mostrarError("No se pudo conectar con el servidor. Inténtalo nuevamente.");
                 });
+        }
+        // Función para restablecer el formulario
+        function resetearFormulario() {
+            document.getElementById("horario-form").reset(); // Restablece todos los campos del formulario
         }
         
         // Función para cargar la tabla de horarios
