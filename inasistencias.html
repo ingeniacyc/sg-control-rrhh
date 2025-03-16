@@ -115,7 +115,7 @@
                                   <i class="uil-window"></i>Asistencia <div class="arrow-down"></div>
                               </a>
                               <div class="dropdown-menu" aria-labelledby="topnav-layouts">
-                                  <a href="layouts-vertical.html" class="dropdown-item" >Horario</a>
+                                  <a href="horario.html" class="dropdown-item" >Horario</a>
                                   <a href="layouts-detached.html" class="dropdown-item" >Marcaciones</a>
                               </div>
                           </li>
@@ -125,7 +125,7 @@
                                     <i class="uil-copy-alt"></i>Justificaciones <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-pages">
-                                    <a href="pages-starter.html" class="dropdown-item">Inasistencias</a>
+                                    <a href="inasistencias.html" class="dropdown-item">Inasistencias</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -179,6 +179,11 @@
                                     <div class="mb-3">
                                         <label for="motivo" class="form-label">Motivo de Inasistencia</label>
                                         <textarea class="form-control" id="motivo" name="motivo" rows="3" required></textarea>
+                                    </div>
+                                    <!-- Campo para adjuntar archivo -->
+                                    <div class="mb-3">
+                                        <label for="archivo" class="form-label">Adjuntar Archivo</label>
+                                        <input type="file" class="form-control" id="archivo" name="archivo" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Registrar</button>
                                 </form>
@@ -268,9 +273,10 @@
             const fechaInicio = document.getElementById("fechaInicio").value;
             const fechaTermino = document.getElementById("fechaTermino").value;
             const motivo = document.getElementById("motivo").value.trim();
+            const archivo = document.getElementById("archivo").files[0];
         
             // Validar campos obligatorios
-            if (!dniUsuario || !fechaInicio || !fechaTermino || !motivo) {
+            if (!dniUsuario || !fechaInicio || !fechaTermino || !motivo || !archivo ) {
                 mostrarError("Por favor, completa todos los campos.");
                 return;
             }
@@ -282,6 +288,7 @@
             formData.append("fechaInicio", fechaInicio);
             formData.append("fechaTermino", fechaTermino);
             formData.append("motivo", motivo);
+            formData.append("archivo", archivo);
         
             // Enviar los datos al servidor
             registrarInasistencia(formData);
