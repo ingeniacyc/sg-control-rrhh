@@ -3,51 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir Archivo a Drive</title>
+    <title>Seleccionar Archivo de Drive</title>
 </head>
 <body>
-    <h1>Subir Archivo a Google Drive</h1>
-    <form id="upload-form">
-        <label for="archivo">Selecciona un archivo:</label>
-        <input type="file" id="archivo" name="archivo" required>
-        <button type="submit">Subir Archivo</button>
-    </form>
-
+    <h1>Seleccionar Archivo de Google Drive</h1>
+    <button id="pick-file">Seleccionar Archivo</button>
     <p id="mensaje"></p>
 
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxiF_FK99UiokvYN2X_2cVPlK4spURpjKH8Z2lfpkSFJPv7kFCX706194DfytiTpnd_/exec'; // Reemplaza con tu URL de Google Apps Script
+        const CLIENT_ID = '206647305024-sb2rvvq8nb6iile70gqtpjrsc5ljt02c.apps.googleusercontent.com'; // Reemplaza con tu ID de cliente OAuth
+        const API_KEY = 'TU_API_KEY'; // Reemplaza con tu clave API
 
-        document.getElementById("upload-form").addEventListener("submit", function (event) {
-            event.preventDefault();
+        // Cargar la API de Google Picker
+        function loadPicker() {
+            gapi.load('picker', { callback: onPickerApiLoad });
+        }
 
-            const archivo = document.getElementById("archivo").files[0];
-            if (!archivo) {
-                alert("Por favor, selecciona un archivo.");
-                return;
-            }
+        // Inicializar el Picker
+        function onPickerApiLoad() {
+            const picker = new google.picker.PickerBuilder()
+                .addView(google.picker.ViewId.DOCS)
+                .setOAuthToken(gapi.auth.getToken().access_token)
+                .setDeveloperKey(API_KEY)
+                .setCallback(pickerCallback)
+                .build();
+            picker.setVisible(true);
+        }
 
-            const formData = new FormData();
-            formData.append("action", "subirArchivo");
-            formData.append("archivo", archivo);
+        // Manejar la selección de archivos
+        function pickerCallback(data) {
+            if (data.action === google.picker.Action.PICKED) {
+                const fileId = data.docs[0].id;
+                const fileName = data.docs[0].name;
+                document.getElementById("mensaje").textContent = `Archivo seleccionado: ${fileName}`;
 
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById("mensaje").textContent = "Archivo subido correctamente. URL: " + data.url;
-                    } else {
-                        document.getElementById("mensaje").textContent = "Error: " + data.message;
-                    }
+                // Enviar el ID del archivo al servidor
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "subirArchivo", fileId: fileId }),
+                    headers: { "Content-Type": "application/json" }
                 })
-                .catch(error => {
-                    console.error("Error:", error);
-                    document.getElementById("mensaje").textContent = "Error al subir el archivo.";
-                });
-        });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById("mensaje").textContent = "Archivo subido correctamente. URL: " + data.url;
+                        } else {
+                            document.getElementById("mensaje").textContent = "Error: " + data.message;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        document.getElementById("mensaje").textContent = "Error al subir el archivo.";
+                    });
+            }
+        }
+
+        // Autenticar al usuario
+        function authenticate() {
+            gapi.auth2.init({
+                client_id: CLIENT_ID,
+                scope: 'https://www.googleapis.com/auth/drive.readonly'
+            }).then(() => {
+                gapi.auth2.getAuthInstance().signIn();
+            });
+        }
+
+        // Inicializar la API de Google
+        function init() {
+            gapi.load('auth2', { callback: authenticate });
+        }
+
+        // Cargar la API de Google
+        function loadGoogleApi() {
+            const script = document.createElement('script');
+            script.src = 'https://apis.google.com/js/api.js';
+            script.onload = () => {
+                gapi.load('client', init);
+            };
+            document.head.appendChild(script);
+        }
+
+        // Iniciar el proceso
+        document.getElementById("pick-file").addEventListener("click", loadPicker);
+        loadGoogleApi();
     </script>
 </body>
 </html>
