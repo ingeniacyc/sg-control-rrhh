@@ -98,7 +98,6 @@
         </div>
         <!-- ========== Topbar End ========== -->
 
-
         <!-- ========== Horizontal Menu Start ========== -->
         <div class="topnav">
             <div class="container-fluid">
@@ -145,13 +144,9 @@
         </div>
         <!-- ========== Horizontal Menu End ========== -->
 
-        <!-- ============================================================== -->
-        <!-- Start Page Content here -->
-        <!-- ============================================================== -->
-
+        <!- ------------ Start Page Content here ---------- ->
         <div class="content-page">
             <div class="content">
-
                 <!-- Start Content-->
                 <div class="container-fluid">
 
@@ -159,7 +154,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="page-title-box">
-                                <h4 class="page-title">Horario</h4>
+                                <h4 class="page-title">Inasistencia</h4>
                             </div>
                         </div>
                     </div>
@@ -167,69 +162,34 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                          <div class="p-4 mb-4 shadow rounded bg-white">
-                           <h3><strong>Registro de Horario Laboral</strong></h3>
-                           <form id="horario-form">
-                              <input type="hidden" id="dniHidden" name="dniUsuario">
-                               <!-- Campos para fechas de inicio y fin -->
-                                <div class="mb-3">
-                                    <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="fechaFin" class="form-label">Fecha de Fin</label>
-                                    <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
-                                </div>
-                               <!-- Campo oculto para almacenar el DNI del usuario logueado -->
-                                      <div class="mb-3">
-                                          <label class="form-label">Días de Trabajo</label><br>
-                                          <input type="checkbox" name="dias" value="Lunes"> Lunes
-                                          <input type="checkbox" name="dias" value="Martes"> Martes
-                                          <input type="checkbox" name="dias" value="Miércoles"> Miércoles
-                                          <input type="checkbox" name="dias" value="Jueves"> Jueves
-                                          <input type="checkbox" name="dias" value="Viernes"> Viernes
-                                          <input type="checkbox" name="dias" value="Sábado"> Sábado
-                                          <input type="checkbox" name="dias" value="Domingo"> Domingo
-                                      </div>
-                                      <div class="mb-3">
-                                        <label for="horarioEntrada" class="form-label">Hora de Entrada</label>
-                                        <input type="time" class="form-control" id="horarioEntrada" name="horarioEntrada" required>
+                            <div class="p-4 mb-4 shadow rounded bg-white">
+                                <h3><strong>Registro de Inasistencia</strong></h3>
+                                <form id="inasistencia-form">
+                                    <input type="hidden" id="dniHidden" name="dniUsuario">
+                                    <!-- Campos para fechas de inicio y término -->
+                                    <div class="mb-3">
+                                        <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="horarioSalida" class="form-label">Hora de Salida</label>
-                                        <input type="time" class="form-control" id="horarioSalida" name="horarioSalida" required>
+                                        <label for="fechaTermino" class="form-label">Fecha de Término</label>
+                                        <input type="date" class="form-control" id="fechaTermino" name="fechaTermino" required>
                                     </div>
-                                      <button type="submit" class="btn btn-primary">Registrar</button>
-                                  </form>
-                              </div>
-
-                              <div class="p-4 mb-4 shadow rounded bg-white"style="padding:20px;">
-                                <div class="table-responsive">
-                                     <table id="tabla-horarios" class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Usuario</th>
-                                                <th>Día</th>
-                                                <th>Fecha</th>
-                                                <th>Hora Entrada</th>
-                                                <th>Hora Salida</th>
-                                                <th>Fecha Registro</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-
-                                </div>
-                              </div>
-
-                              <div id="spinner" style="display:none;">
-                                <p>Cargando...</p>
-                              </div>
+                                    <!-- Campo para el motivo de inasistencia -->
+                                    <div class="mb-3">
+                                        <label for="motivo" class="form-label">Motivo de Inasistencia</label>
+                                        <textarea class="form-control" id="motivo" name="motivo" rows="3" required></textarea>
+                                    </div>
+                                    <!-- Campo para adjuntar archivo -->
+                                    <div class="mb-3">
+                                        <label for="archivo" class="form-label">Adjuntar Archivo</label>
+                                        <input type="file" class="form-control" id="archivo" name="archivo" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Registrar</button>
+                                </form>
+                            </div>
                         </div>
-                    <!-- end row -->
                     </div>
-
                 </div> <!-- container -->
 
           </div> <!-- content -->
@@ -305,83 +265,38 @@
             document.getElementById("horario-form").addEventListener("submit", manejarRegistroHorario);
         }
         
-        // Función para manejar el registro de horarios
-        function manejarRegistroHorario(event) {
+        // Función para manejar el registro de inasistencia
+        function manejarRegistroInasistencia(event) {
             event.preventDefault();
+        
             // Obtener datos del formulario
             const dniUsuario = localStorage.getItem("dniUsuario");
             const fechaInicio = document.getElementById("fechaInicio").value;
-            const fechaFin = document.getElementById("fechaFin").value;
-            const horarioEntrada = document.getElementById("horarioEntrada").value.trim();
-            const horarioSalida = document.getElementById("horarioSalida").value.trim();
+            const fechaTermino = document.getElementById("fechaTermino").value;
+            const motivo = document.getElementById("motivo").value.trim();
+            const archivo = document.getElementById("archivo").files[0];
         
             // Validar campos obligatorios
-            if (!dniUsuario || !fechaInicio || !fechaFin || !horarioEntrada || !horarioSalida) {
+            if (!dniUsuario || !fechaInicio || !fechaTermino || !motivo || !archivo) {
                 mostrarError("Por favor, completa todos los campos.");
-                return;
-            }
-        
-            // Obtener los días seleccionados
-            const diasSeleccionados = Array.from(document.querySelectorAll("input[name='dias']:checked"))
-                .map(checkbox => checkbox.value);
-        
-            if (diasSeleccionados.length === 0) {
-                mostrarError("Por favor, selecciona al menos un día.");
-                return;
-            }
-        
-            // Calcular las fechas correspondientes a los días seleccionados
-            const fechasRegistro = calcularFechasRegistro(fechaInicio, fechaFin, diasSeleccionados);
-        
-            if (fechasRegistro.length === 0) {
-                mostrarError("No hay fechas válidas en el rango seleccionado.");
                 return;
             }
         
             // Preparar los datos para enviar al servidor
             const formData = new FormData();
-            formData.append("action", "registroHorario");
+            formData.append("action", "registroInasistencia");
             formData.append("usuario", dniUsuario);
-            formData.append("fechas", JSON.stringify(fechasRegistro)); // Enviar las fechas como JSON
-            formData.append("horarioEntrada", horarioEntrada);
-            formData.append("horarioSalida", horarioSalida);
+            formData.append("fechaInicio", fechaInicio);
+            formData.append("fechaTermino", fechaTermino);
+            formData.append("motivo", motivo);
+            formData.append("archivo", archivo);
         
             // Enviar los datos al servidor
-            registrarHorario(formData);
-        }
-        // Función para calcular las fechas de registro
-        function calcularFechasRegistro(fechaInicio, fechaFin, diasSeleccionados) {
-            const fechas = [];
-            const inicio = new Date(fechaInicio);
-            const fin = new Date(fechaFin);
-        
-            // Mapear los nombres de los días a números (0 = Domingo, 1 = Lunes, ..., 6 = Sábado)
-            const diasNumericos = {                
-                "Lunes": 0,
-                "Martes": 1,
-                "Miércoles": 2,
-                "Jueves": 3,
-                "Viernes": 4,
-                "Sábado": 5,
-                "Domingo": 6
-            };
-        
-            // Recorrer el rango de fechas
-            for (let fecha = inicio; fecha <= fin; fecha.setDate(fecha.getDate() + 1)) {
-                const diaSemana = fecha.getDay(); // Obtener el día de la semana (0-6)
-                const nombreDia = Object.keys(diasNumericos).find(key => diasNumericos[key] === diaSemana);
-        
-                // Si el día está seleccionado, agregar la fecha al array
-                if (diasSeleccionados.includes(nombreDia)) {
-                    fechas.push(fecha.toISOString().split("T")[0]); // Formato YYYY-MM-DD
-                }
-            }
-        
-            return fechas;
+            registrarInasistencia(formData);
         }
         
-        // Función para registrar un horario
-        function registrarHorario(formData) {
+        // Función para registrar la inasistencia
+        function registrarInasistencia(formData) {
             fetch(SCRIPT_URL, {
                 method: "POST",
                 body: formData
@@ -389,11 +304,10 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        mostrarExito("Horario registrado", "Tu horario se ha guardado correctamente.");
-                        cargarTablaHorarios();
+                        mostrarExito("Inasistencia registrada", "Tu inasistencia se ha guardado correctamente.");
                         resetearFormulario();
                     } else {
-                        mostrarError(data.message || "Hubo un problema al registrar el horario.");
+                        mostrarError(data.message || "Hubo un problema al registrar la inasistencia.");
                     }
                 })
                 .catch(error => {
@@ -401,9 +315,10 @@
                     mostrarError("No se pudo conectar con el servidor. Inténtalo nuevamente.");
                 });
         }
+        
         // Función para restablecer el formulario
         function resetearFormulario() {
-            document.getElementById("horario-form").reset(); // Restablece todos los campos del formulario
+            document.getElementById("inasistencia-form").reset(); // Restablece todos los campos del formulario
         }
         
         // Función para cargar la tabla de horarios
