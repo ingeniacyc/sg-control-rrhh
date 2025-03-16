@@ -234,6 +234,7 @@
                                           <input type="checkbox" name="dias" value="Jueves"> Jueves
                                           <input type="checkbox" name="dias" value="Viernes"> Viernes
                                           <input type="checkbox" name="dias" value="Sábado"> Sábado
+                                          <input type="checkbox" name="dias" value="Domingo"> Domingo
                                       </div>
                                       <div class="mb-3">
                                         <label for="horarioEntrada" class="form-label">Hora de Entrada</label>
@@ -400,14 +401,14 @@
             const fin = new Date(fechaFin);
         
             // Mapear los nombres de los días a números (0 = Domingo, 1 = Lunes, ..., 6 = Sábado)
-            const diasNumericos = {
-                "Domingo": 0,
-                "Lunes": 1,
-                "Martes": 2,
-                "Miércoles": 3,
-                "Jueves": 4,
-                "Viernes": 5,
-                "Sábado": 6
+            const diasNumericos = {                
+                "Lunes": 0,
+                "Martes": 1,
+                "Miércoles": 2,
+                "Jueves": 3,
+                "Viernes": 4,
+                "Sábado": 5,
+                "Domingo": 6
             };
         
             // Recorrer el rango de fechas
