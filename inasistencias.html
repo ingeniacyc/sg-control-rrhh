@@ -279,17 +279,40 @@
                 return;
             }
         
-            // Preparar los datos para enviar al servidor
-            const formData = new FormData();
-            formData.append("action", "registroInasistencia");
-            formData.append("usuario", dniUsuario);
-            formData.append("fechaInicio", fechaInicio);
-            formData.append("fechaTermino", fechaTermino);
-            formData.append("motivo", motivo);
-            formData.append("archivo", archivo);
+            // Leer el archivo como ArrayBuffer
+            const fr = new FileReader();
+            fr.readAsArrayBuffer(archivo);
+            fr.onload = (f) => {
+                const url = SCRIPT_URL; // URL de tu script de Apps Script
         
-            // Enviar los datos al servidor
-            registrarInasistencia(formData);
+                const qs = new URLSearchParams({
+                    action: "registroInasistencia",
+                    usuario: dniUsuario,
+                    fechaInicio: fechaInicio,
+                    fechaTermino: fechaTermino,
+                    motivo: motivo,
+                    filename: archivo.name,
+                    mimeType: archivo.type,
+                });
+        
+                fetch(`${url}?${qs}`, {
+                    method: "POST",
+                    body: JSON.stringify([...new Int8Array(f.target.result)]),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.success) {
+                            mostrarExito("Inasistencia registrada", "Tu inasistencia se ha guardado correctamente.");
+                            resetearFormulario();
+                        } else {
+                            mostrarError(data.message || "Hubo un problema al registrar la inasistencia.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        mostrarError("No se pudo conectar con el servidor. Inténtalo nuevamente.");
+                    });
+            };
         }
         
         function registrarInasistencia(formData) {
