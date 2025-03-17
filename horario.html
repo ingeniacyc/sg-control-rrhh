@@ -260,6 +260,7 @@
                                                 <th>Hora Entrada</th>
                                                 <th>Hora Salida</th>
                                                 <th>Fecha Registro</th>
+                                                <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -278,6 +279,52 @@
                 </div> <!-- container -->
 
           </div> <!-- content -->
+            
+            <!-- Modal de Edición -->
+            
+            <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalEditarLabel">Editar Horario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formEditarHorario">
+                                <input type="hidden" id="editID" name="editID">
+            
+                                <div class="mb-3">
+                                    <label for="editUsuario" class="form-label">Usuario</label>
+                                    <input type="text" class="form-control" id="editUsuario" name="editUsuario" readonly>
+                                </div>
+            
+                                <div class="mb-3">
+                                    <label for="editDia" class="form-label">Día</label>
+                                    <select class="form-control" id="editDia" name="editDia" disabled></select>
+                                </div>
+            
+                                <div class="mb-3">
+                                    <label for="editFecha" class="form-label">Fecha</label>
+                                    <input type="date" class="form-control" id="editFecha" name="editFecha" required>
+                                </div>
+            
+                                <div class="mb-3">
+                                    <label for="editHoraEntrada" class="form-label">Hora de Entrada</label>
+                                    <input type="time" class="form-control" id="editHoraEntrada" name="editHoraEntrada" required>
+                                </div>
+            
+                                <div class="mb-3">
+                                    <label for="editHoraSalida" class="form-label">Hora de Salida</label>
+                                    <input type="time" class="form-control" id="editHoraSalida" name="editHoraSalida" required>
+                                </div>
+            
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Footer Start -->
             <footer class="footer">
@@ -461,7 +508,7 @@
                         registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
                         registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
                         registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
-                        registro["fecha"] = formatearFecha(registro["fecha"]); // Formatear la fecha
+                        registro["fecha"] = formatearFecha(registro["fecha"]); // Formatear la fecha                        
                     });
         
                     if ($.fn.DataTable.isDataTable('#tabla-horarios')) {
@@ -477,18 +524,121 @@
                             { data: "fecha" }, // Nueva columna: fecha
                             { data: "Horario Entrada" },
                             { data: "Horario Salida" },
-                            { data: "Hora Registro" }
+                            { data: "Hora Registro" },
+                            {
+                                data: "ID",
+                                render: function (data, type, row) {
+                                    return `
+                                        <button class="btn btn-warning btn-sm btn-editar" data-id="${row.ID}" data-usuario="${row.Usuario}" data-dia="${row.Día}" data-fecha="${row.fecha}" data-horaentrada="${row["Horario Entrada"]}" data-horasalida="${row["Horario Salida"]}">
+                                            Editar
+                                        </button>
+                                        <button class="btn btn-danger btn-sm btn-eliminar" data-id="${row.ID}">
+                                            Eliminar
+                                        </button>`;
+                                }
+                            }
                         ],
                         language: {
                             url: "//cdn.datatables.net/plug-ins/2.2.1/i18n/es-ES.json"
                         }
                     });
+                    // Eventos de los botones
+                    $('#tabla-horarios tbody').on('click', '.btn-editar', abrirModalEdicion);
+                    $('#tabla-horarios tbody').on('click', '.btn-eliminar', eliminarRegistro);
                 })
                 .catch(error => {
                     console.error("Error al obtener datos:", error);
                     mostrarError("No se pudieron cargar los datos. Inténtalo nuevamente.");
                 });
         }
+
+        // ---------------- BOTONES TABLA ---------------------
+        function abrirModalEdicion() {
+            const id = $(this).data('id');
+            const usuario = $(this).data('usuario');
+            const dia = $(this).data('dia');
+            const fecha = $(this).data('fecha');
+            const horaEntrada = $(this).data('horaentrada');
+            const horaSalida = $(this).data('horasalida');
+        
+            $("#editID").val(id);
+            $("#editUsuario").val(usuario);
+            $("#editFecha").val(fecha);
+            $("#editHoraEntrada").val(horaEntrada);
+            $("#editHoraSalida").val(horaSalida);
+        
+            // Llenar el dropdown con el día seleccionado (deshabilitado)
+            $("#editDia").html(`<option selected>${dia}</option>`);
+        
+            $("#modalEditar").modal("show");
+        }
+
+        $("#formEditarHorario").on("submit", function(event) {
+            event.preventDefault();
+        
+            const formData = new FormData();
+            formData.append("action", "editarHorario");
+            formData.append("id", $("#editID").val());
+            formData.append("fecha", $("#editFecha").val());
+            formData.append("horaEntrada", $("#editHoraEntrada").val());
+            formData.append("horaSalida", $("#editHoraSalida").val());
+        
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    mostrarExito("Horario actualizado", "Se guardaron los cambios correctamente.");
+                    $("#modalEditar").modal("hide");
+                    cargarTablaHorarios();
+                } else {
+                    mostrarError(data.message || "Hubo un problema al actualizar el horario.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                mostrarError("No se pudo conectar con el servidor.");
+            });
+        });
+
+
+        function eliminarRegistro() {
+            const id = $(this).data("id");
+        
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Esta acción no se puede deshacer.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar"
+            }).then(result => {
+                if (result.isConfirmed) {
+                    fetch(SCRIPT_URL, {
+                        method: "POST",
+                        body: new URLSearchParams({ action: "eliminarHorario", id: id })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            mostrarExito("Horario eliminado", "El registro ha sido eliminado.");
+                            cargarTablaHorarios();
+                        } else {
+                            mostrarError(data.message || "Hubo un problema al eliminar el registro.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        mostrarError("No se pudo conectar con el servidor.");
+                    });
+                }
+            });
+        }
+
         
         // Función para formatear la hora a HH:mm
         function formatearHora(hora) {
