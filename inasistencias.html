@@ -186,6 +186,27 @@
                                     <button type="submit" class="btn btn-primary">Registrar</button>
                                 </form>
                             </div>
+
+                            <div class="p-4 mb-4 shadow rounded bg-white"style="padding:20px;">
+                                <div class="table-responsive">
+                                     <table id="tabla-inasistencias" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Usuario</th>
+                                                <th>Día</th>
+                                                <th>Fecha</th>
+                                                <th>Hora Entrada</th>
+                                                <th>Hora Salida</th>
+                                                <th>Fecha Registro</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+
+                                </div>
+                              </div>
+                            
                         </div>
                     </div>
                 </div> <!-- container -->
@@ -228,11 +249,13 @@
     // Variables globales
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZV4_siNaeLwU_XTY4t4rTnsVgzY9hvCuy5318ahUHRa_At0KSIOZvsWst_yY7DVf3wA/exec';
         let tablaHorarios;
+        let tablaInasistencia;
+        
         // Inicializar al cargar la página
         document.addEventListener("DOMContentLoaded", function () {
             cargarDatosUsuario();
             inicializarEventos();
-            cargarTablaHorarios();
+            cargarTablaInasistencias();
         });
         
         // Función para cargar los datos del usuario desde localStorage
@@ -341,31 +364,33 @@
         }
         
         // Función para cargar la tabla de horarios
-        function cargarTablaHorarios() {
-            fetch(SCRIPT_URL)
+        function cargarTablaInasistencias() {
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({action: 'obtenerInasistencias'})
+            })
                 .then(response => response.json())
                 .then(datos => {
                     datos.forEach(registro => {
-                        registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
-                        registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
-                        registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
-                        registro["fecha"] = formatearFecha(registro["fecha"]); // Formatear la fecha
+                        registro["Fecha Inicio"] = formatearFecha(registro["Fecha Inicio"]);
+                        registro["Fecha Termino"] = formatearFecha(registro["Fecha Termino"]);
+                        registro["Fecha Registro"] = formatearFechaHora(registro["Fecha Registro"]);
                     });
         
-                    if ($.fn.DataTable.isDataTable('#tabla-horarios')) {
-                        tablaHorarios.destroy();
+                    if ($.fn.DataTable.isDataTable('#tabla-inasistencias')) {
+                        tablaInasistencia.destroy();
                     }
         
-                    tablaHorarios = $('#tabla-horarios').DataTable({
+                    tablaInasistencia = $('#tabla-inasistencias').DataTable({
                         data: datos,
                         columns: [
                             { data: "ID" },
                             { data: "Usuario" },
-                            { data: "Día" },
-                            { data: "fecha" }, // Nueva columna: fecha
-                            { data: "Horario Entrada" },
-                            { data: "Horario Salida" },
-                            { data: "Hora Registro" }
+                            { data: "Fecha Inicio" },
+                            { data: "Fecha Termino" },
+                            { data: "Motivo" },
+                            { data: "Archivo" },
+                            { data: "Fecha Registro" }
                         ],
                         language: {
                             url: "//cdn.datatables.net/plug-ins/2.2.1/i18n/es-ES.json"
