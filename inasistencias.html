@@ -363,41 +363,24 @@
             document.getElementById("inasistencia-form").reset(); // Restablece todos los campos del formulario
         }
         
+         // Función para cargar la tabla de horarios
         function cargarTablaInasistencias() {
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Especifica el tipo de contenido
-                },
-                body: JSON.stringify({ action: 'obtenerInasistencias' }), // Envía la acción
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la solicitud: ' + response.statusText);
-                    }
-                    return response.json(); // Parsea la respuesta como JSON
-                })
-                .then(data => {
-                    if (!data.success) {
-                        throw new Error(data.message || "Error al obtener los datos");
-                    }
-        
-                    // Procesar los datos
-                    const registros = data.data; // Accede a los datos dentro de la propiedad "data"
-                    registros.forEach(registro => {
+            const url = `${SCRIPT_URL}?action=obtenerInasistencias`; 
+            fetch(url)
+                .then(response => response.json())
+                .then(datos => {
+                    datos.forEach(registro => {
                         registro["Fecha Inicio"] = formatearFecha(registro["Fecha Inicio"]);
                         registro["Fecha Termino"] = formatearFecha(registro["Fecha Termino"]);
                         registro["Fecha Registro"] = formatearFechaHora(registro["Fecha Registro"]);
                     });
         
-                    // Verificar si ya existe una instancia de DataTable y destruirla
                     if ($.fn.DataTable.isDataTable('#tabla-inasistencias')) {
-                        $('#tabla-inasistencias').DataTable().destroy();
+                        tablaInasistencia.destroy();
                     }
         
-                    // Inicializar la tabla de inasistencias
-                    $('#tabla-inasistencias').DataTable({
-                        data: registros,
+                    tablaInasistencia = $('#tabla-inasistencias').DataTable({
+                        data: datos,
                         columns: [
                             { data: "ID" },
                             { data: "Usuario" },
@@ -456,27 +439,6 @@
                 }
             }
             return fechaHora;
-        }
-        
-        // Función para formatear la fecha a dd/mm/YYYY
-        function formatearFecha(fecha) {
-            if (fecha instanceof Date) {
-                return fecha.toLocaleDateString('es-ES', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                });
-            } else if (typeof fecha === 'string') {
-                const fechaObj = new Date(fecha);
-                if (!isNaN(fechaObj.getTime())) {
-                    return fechaObj.toLocaleDateString('es-ES', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
-                }
-            }
-            return fecha; // Si no es un formato reconocido, devuelve el valor original
         }
         
         // Función para mostrar mensajes de éxito
