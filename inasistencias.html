@@ -363,26 +363,41 @@
             document.getElementById("inasistencia-form").reset(); // Restablece todos los campos del formulario
         }
         
-        // Función para cargar la tabla de horarios
         function cargarTablaInasistencias() {
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify({action: 'obtenerInasistencias'})
+                headers: {
+                    'Content-Type': 'application/json', // Especifica el tipo de contenido
+                },
+                body: JSON.stringify({ action: 'obtenerInasistencias' }), // Envía la acción
             })
-                .then(response => response.json())
-                .then(datos => {
-                    datos.forEach(registro => {
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud: ' + response.statusText);
+                    }
+                    return response.json(); // Parsea la respuesta como JSON
+                })
+                .then(data => {
+                    if (!data.success) {
+                        throw new Error(data.message || "Error al obtener los datos");
+                    }
+        
+                    // Procesar los datos
+                    const registros = data.data; // Accede a los datos dentro de la propiedad "data"
+                    registros.forEach(registro => {
                         registro["Fecha Inicio"] = formatearFecha(registro["Fecha Inicio"]);
                         registro["Fecha Termino"] = formatearFecha(registro["Fecha Termino"]);
                         registro["Fecha Registro"] = formatearFechaHora(registro["Fecha Registro"]);
                     });
         
+                    // Verificar si ya existe una instancia de DataTable y destruirla
                     if ($.fn.DataTable.isDataTable('#tabla-inasistencias')) {
-                        tablaInasistencia.destroy();
+                        $('#tabla-inasistencias').DataTable().destroy();
                     }
         
-                    tablaInasistencia = $('#tabla-inasistencias').DataTable({
-                        data: datos,
+                    // Inicializar la tabla de inasistencias
+                    $('#tabla-inasistencias').DataTable({
+                        data: registros,
                         columns: [
                             { data: "ID" },
                             { data: "Usuario" },
