@@ -492,15 +492,14 @@
         
         // Función para formatear la hora a HH:mm
         function formatearHora(hora) {
-            if (hora instanceof Date) {
-                return hora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-            } else if (typeof hora === 'string') {
-                const fechaHora = new Date(hora);
-                if (!isNaN(fechaHora.getTime())) {
-                    return fechaHora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                }
-            }
-            return hora;
+             if (hora instanceof Date) {
+                // Si es un objeto Date, formatea a HH:mm
+                return Utilities.formatDate(hora, Session.getScriptTimeZone(), "HH:mm");
+              } else if (typeof hora === 'string' && hora.includes(':')) {
+                // Si es una cadena en formato HH:mm:ss, extrae HH:mm
+                return hora.split(':').slice(0, 2).join(':');
+              }
+              return hora; // Si no es un formato reconocido, devuelve el valor original
         }
         
         // Función para formatear la fecha y hora a dd/mm/YYYY HH:mm:ss
