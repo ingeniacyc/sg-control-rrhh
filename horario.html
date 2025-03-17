@@ -453,7 +453,8 @@
         
         // Función para cargar la tabla de horarios
         function cargarTablaHorarios() {
-            fetch(SCRIPT_URL)
+            const url = `${SCRIPT_URL}?action=obtenerHorarios`; 
+            fetch(url)
                 .then(response => response.json())
                 .then(datos => {
                     datos.forEach(registro => {
