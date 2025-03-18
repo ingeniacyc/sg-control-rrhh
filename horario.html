@@ -561,9 +561,6 @@
             const fecha = $(this).data('fecha');
             const horaEntrada = $(this).data('horaentrada');
             const horaSalida = $(this).data('horasalida');
-
-            // Verificar si la fecha tiene el formato correcto (YYYY-MM-DD)
-            fecha = convertirFechaParaInput(fecha);
         
             $("#editID").val(id);
             $("#editUsuario").val(usuario);
@@ -606,17 +603,6 @@
                 mostrarError("No se pudo conectar con el servidor.");
             });
         });
-
-        function convertirFechaParaInput(fecha) {
-            if (typeof fecha === 'string' && fecha.includes('/')) {
-                // Si la fecha está en formato dd/mm/YYYY, convertir a YYYY-MM-DD
-                const partes = fecha.split('/');
-                return `${partes[2]}-${partes[1]}-${partes[0]}`;
-            }
-            return fecha; // Si ya está en YYYY-MM-DD, lo deja igual
-        }
-
-
 
         function eliminarRegistro() {
             const id = $(this).data("id");
