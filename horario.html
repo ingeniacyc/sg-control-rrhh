@@ -509,7 +509,7 @@
                         registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
                         registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
                         registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
-                        registro["fecha"] = formatearFecha(registro["fecha"]); // Formatear la fecha                        
+                        registro["fecha"] = registro["fecha"]; // Formatear la fecha                        
                     });
         
                     if ($.fn.DataTable.isDataTable('#tabla-horarios')) {
