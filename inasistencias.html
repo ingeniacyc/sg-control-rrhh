@@ -201,6 +201,7 @@
                                                 <th>Fecha Termino</th>
                                                 <th>Motivo</th>
                                                 <th>Archivo</th>
+                                                <th>Estado</th>
                                                 <th>Fecha Registro</th>
                                             </tr>
                                         </thead>
@@ -395,7 +396,9 @@
                                 render: function (data, type, row) {
                                     return `<a href="${data}" class="btn btn-primary btn-sm" download>Descargar</a>`;}
                             },
+                            { data: "Estado" },
                             { data: "Fecha Registro" }
+                            
                         ],
                         language: {
                             url: "//cdn.datatables.net/plug-ins/2.2.1/i18n/es-ES.json"
