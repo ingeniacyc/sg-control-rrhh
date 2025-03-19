@@ -566,7 +566,7 @@
         
             $("#editID").val(id);
             $("#editUsuario").val(usuario);
-            $("#editFecha").val(fecha);
+            $("#editFecha").val(fechaFormateada);
             $("#editHoraEntrada").val(horaEntrada);
             $("#editHoraSalida").val(horaSalida);
         
@@ -607,11 +607,14 @@
         });
 
         function formatearFechaParaInputDate(fecha) {
-            const date = new Date(fecha);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexados
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            const fechaObj = new Date(fecha);
+            if (!isNaN(fechaObj.getTime())) {
+                const año = fechaObj.getFullYear();
+                const mes = String(fechaObj.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+                const dia = String(fechaObj.getDate()).padStart(2, '0');
+                return `${año}-${mes}-${dia}`;
+            }
+            return fecha; // Si no es una fecha válida, devuelve el valor original
         }
 
         function eliminarRegistro() {
