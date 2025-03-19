@@ -387,7 +387,11 @@
                             { data: "Fecha Inicio" },
                             { data: "Fecha Termino" },
                             { data: "Motivo" },
-                            { data: "Archivo" },
+                            {
+                            data: "Archivo", // Columna del archivo
+                            render: function (data, type, row) {
+                                return `<a href="${data}" class="btn btn-primary btn-sm" download>Descargar</a>`;
+                            },
                             { data: "Fecha Registro" }
                         ],
                         language: {
