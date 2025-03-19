@@ -311,9 +311,13 @@
         
         // Inicializar al cargar la página
         document.addEventListener("DOMContentLoaded", function () {
-            const dniUsuario = cargarDatosUsuario(); 
+            const dniUsuario = cargarDatosUsuario(); // Obtener el DNI del usuario
+            if (dniUsuario) {
+                cargarTablaInasistencias(dniUsuario); // Cargar la tabla con el DNI
+            } else {
+                console.error("No se encontró el DNI del usuario en localStorage.");
+            }
             inicializarEventos();
-            cargarTablaInasistencias(dniUsuario);
         });
         
         // Función para cargar los datos del usuario desde localStorage
