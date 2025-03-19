@@ -327,7 +327,7 @@
                 try {
                     const usuario = JSON.parse(usuarioData);
                     document.getElementById("nombreUsuario").textContent = usuario.nombre || "Usuario";
-                    document.getElementById("tipousuario").textContent = usuario.rol || "Sin rol";
+                    document.getElementById("tipousuario").textContent = usuario.dni || "Sin rol";
                     // Almacenar el dniUsuario en localStorage si existe en los datos del usuario
                     if (usuario.dni) {
                         localStorage.setItem("dniUsuario", usuario.dni);
