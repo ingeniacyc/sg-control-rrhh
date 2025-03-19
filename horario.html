@@ -509,7 +509,7 @@
                         registro["Horario Entrada"] = formatearHora(registro["Horario Entrada"]);
                         registro["Horario Salida"] = formatearHora(registro["Horario Salida"]);
                         registro["Hora Registro"] = formatearFechaHora(registro["Hora Registro"]);
-                        registro["fecha"] = registro["fecha"]; // Formatear la fecha                        
+                        registro["fecha"] = formatearFecha(registro["fecha"]);// Formatear la fecha                        
                     });
         
                     if ($.fn.DataTable.isDataTable('#tabla-horarios')) {
@@ -691,23 +691,15 @@
         
         // Función para formatear la fecha a dd/mm/YYYY
         function formatearFecha(fecha) {
-            if (fecha instanceof Date) {
-                return fecha.toLocaleDateString('es-ES', {
+            const fechaObj = new Date(fecha);
+            if (!isNaN(fechaObj.getTime())) { // Verifica si es una fecha válida
+                return fechaObj.toLocaleDateString('es-ES', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric'
                 });
-            } else if (typeof fecha === 'string') {
-                const fechaObj = new Date(fecha);
-                if (!isNaN(fechaObj.getTime())) {
-                    return fechaObj.toLocaleDateString('es-ES', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
-                }
             }
-            return fecha; // Si no es un formato reconocido, devuelve el valor original
+            return fecha; // Si no es una fecha válida, devuelve el valor original
         }
         
         // Función para mostrar mensajes de éxito
