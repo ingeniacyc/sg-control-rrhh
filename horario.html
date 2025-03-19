@@ -87,7 +87,7 @@
                                 <span>Mi cuenta</span>
                             </a>
                             <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item">
+                            <a href="javascript:void(0);" id="cerrarSesionLink" class="dropdown-item">
                                 <i class="mdi mdi-logout me-1"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -368,6 +368,7 @@
             cargarDatosUsuario();
             inicializarEventos();
             cargarTablaHorarios();
+            inicializarCerrarSesion(); // Inicializar el botón de cerrar sesión
         });
         
         // Función para cargar los datos del usuario desde localStorage
@@ -392,6 +393,24 @@
             }
         }
 
+        // Inicializar el botón de cerrar sesión
+        function inicializarCerrarSesion() {
+            const cerrarSesionLink = document.getElementById("cerrarSesionLink");
+                if (cerrarSesionLink) {
+                cerrarSesionLink.addEventListener("click", function (event) {
+                    event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+                    cerrarSesion();
+                });
+            }
+        }
+    
+        // Función para cerrar la sesión
+        function cerrarSesion() {
+            localStorage.removeItem("usuario"); // Eliminar datos del usuario
+            localStorage.removeItem("dniUsuario"); // Eliminar dni del usuario
+            // Redirigir a la página de inicio de sesión (opcional)
+            window.location.href = "index.html"; // Reemplaza "index.html" con la URL de tu página de inicio de sesión
+        }
         
         // Función para inicializar eventos
         function inicializarEventos() {
