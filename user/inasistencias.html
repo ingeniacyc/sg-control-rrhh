@@ -421,7 +421,7 @@
                 });
         }
         
-        // Función para restablecer el formulario
+        // Función para restablecer el formulaario
         function resetearFormulario() {
             document.getElementById("inasistencia-form").reset(); // Restablece todos los campos del formulario
         }
@@ -529,7 +529,7 @@
         
         // Función para editar una inasistencia
         function editarInasistencia(id) {
-            const url = `${SCRIPT_URL}?action=obtenerInasistencia&id=${id}`;
+            const url = `${SCRIPT_URL}?action=obtenerInasistencias&dniUsuario=${dniUsuario}`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
