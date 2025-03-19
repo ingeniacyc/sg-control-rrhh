@@ -38,7 +38,7 @@
                         <!-- Logo Dark -->
                         <a href="index.html" class="logo-dark">
                             <span class="logo-lg">
-                                <img src="assets/fonts/LOGOINGENIA.svg" alt="dark logo">
+                                <img src="assets/fonts/LOGOINGENIA.svg" height="42" alt="dark logo">
                             </span>
                             <span class="logo-sm">
                                 <img src="assets/fonts/LOGOicon.svg" alt="small logo">
@@ -166,13 +166,16 @@
                                     <input type="hidden" id="dniHidden" name="dniUsuario">
                                     <!-- Campos para fechas de inicio y término -->
                                     <div class="mb-3">
-                                        <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="fechaTermino" class="form-label">Fecha de Término</label>
+                                        <div class="col-md-6">
+                                            <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                                            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="fechaTermino" class="form-label">Fecha de Término</label>
                                         <input type="date" class="form-control" id="fechaTermino" name="fechaTermino" required>
+                                        </div>
                                     </div>
+                                        
                                     <!-- Campo para el motivo de inasistencia -->
                                     <div class="mb-3">
                                         <label for="motivo" class="form-label">Motivo de Inasistencia</label>
