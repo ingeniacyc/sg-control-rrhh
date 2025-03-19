@@ -440,6 +440,19 @@
             }
             return fechaHora;
         }
+
+        // Función para formatear la fecha a dd/mm/YYYY
+        function formatearFecha(fecha) {
+            const fechaObj = new Date(fecha);
+            if (!isNaN(fechaObj.getTime())) { // Verifica si es una fecha válida
+                return fechaObj.toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            }
+            return fecha; // Si no es una fecha válida, devuelve el valor original
+        }
         
         // Función para mostrar mensajes de éxito
         function mostrarExito(titulo, mensaje) {
