@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Si no hay datos de usuario, redirigir al login
     if (!usuarioData) {
-        window.location.href = "../index.html";
+        window.location.href = "../../index.html";
         return;
     }
     
@@ -17,9 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Definir qué roles pueden acceder a qué páginas
     const accessRules = {
-        "dashboard.html": ["gestora", "admin"],
+        "user/inasistencias.html": ["gestora"],
+        "user/horario.html": ["gestora"],
+        "indexusuario.html": ["gestora"],
         "horario.html": ["admin"],
-        "reportes.html": ["admin"],
+        "inasistencias.html": ["admin"],
         "configuracion.html": ["admin"]
         // Agrega más páginas y roles según necesites
     };
@@ -37,9 +39,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then(() => {
                 // Redirigir según el rol del usuario
                 if (usuario.rol === "admin") {
-                    window.location.href = "horario.html";
+                    window.location.href = "index.html";
                 } else {
-                    window.location.href = "user/dashboard.html";
+                    window.location.href = "index.html";
                 }
             });
             return;
